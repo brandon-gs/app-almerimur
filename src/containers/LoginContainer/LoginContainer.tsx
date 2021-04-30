@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
 import { Button, TextInput } from "components/";
 import { theme } from "theme/";
-import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import { useThunkDispatch } from "hooks/";
+import actions from "actions/";
+import { useNavigation } from "@react-navigation/core";
 
 const defaultValues: LoginForm = {
   email: "",
@@ -10,6 +12,9 @@ const defaultValues: LoginForm = {
 };
 
 function LoginContainer() {
+  const navigator = useNavigation();
+  const thunkDispatch = useThunkDispatch();
+
   const [values, setValues] = useState<LoginForm>(defaultValues);
 
   const handleChangeValue = (key: string) => (value: string) => {
@@ -21,6 +26,8 @@ function LoginContainer() {
     console.log("submit values");
     console.log(values);
     // TODO: set errors
+    thunkDispatch(actions.login());
+    navigator.navigate("Home");
   };
 
   return (
