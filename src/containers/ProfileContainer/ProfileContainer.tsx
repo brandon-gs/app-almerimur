@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Button, StyledText, TextInput } from "components/";
-import { View, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { baseURL } from "api/";
 import { theme } from "theme/";
 import { useSelector } from "react-redux";
@@ -24,6 +30,10 @@ function ProfileContainer() {
     width: 0,
   });
 
+  const canUpdate = Boolean(
+    image.uri || name !== profile.name || job !== profile.job
+  );
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -36,16 +46,16 @@ function ProfileContainer() {
     }
   };
 
-  const handleSelectImage = async () => {
-    pickImage();
-  };
-
   const handleChangeValue = (key: string) => (value: string) => {
     setProfile({ ...profile, [key]: value });
   };
 
   const handleUpdateProfile = async () => {
+    // Enable loader
+    thunkDispatch(actions.enableLoader());
+    // Verify if profile info has a change
     const changeInfoProfile = name !== profile.name || job !== profile.job;
+    // Initialize default global state message
     let show = false;
     let lastMessage = "Perfil actualizado correctamente.";
     let lastError = false;
@@ -67,7 +77,7 @@ function ProfileContainer() {
       lastError = error;
       show = true;
     }
-    console.log(lastMessage);
+    // Update global state message
     thunkDispatch(
       actions.updateGlobalMessage({
         message: lastMessage,
@@ -75,6 +85,8 @@ function ProfileContainer() {
         type: lastError ? MessageTypes.Danger : MessageTypes.Success,
       })
     );
+    // Disable loader
+    thunkDispatch(actions.disableLoader());
   };
 
   return (
@@ -87,13 +99,14 @@ function ProfileContainer() {
             <Image source={{ uri: baseURL + userImage }} style={styles.image} />
           )}
           <View style={styles.iconEdit}>
-            <Edit onPress={handleSelectImage} />
+            <Edit onPress={pickImage} />
           </View>
         </View>
         <TextInput
           label="Nombre"
           value={profile.name}
           onChangeText={handleChangeValue("name")}
+          style={styles.input}
         />
         <TextInput
           label="Cargo"
@@ -101,9 +114,16 @@ function ProfileContainer() {
           onChangeText={handleChangeValue("job")}
           onSubmitEditing={handleUpdateProfile}
         />
-        {/* <StyledText>Cambiar contraseña</StyledText> */}
+        <View style={styles.passwordText}>
+          <TouchableOpacity>
+            <StyledText color={theme.colors.secondary}>
+              Cambiar contraseña
+            </StyledText>
+          </TouchableOpacity>
+        </View>
         <Button
           text="Guardar"
+          disabled={!canUpdate}
           styleText={{
             color: theme.colors.light,
             size: 2.5,
@@ -121,17 +141,25 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 16,
+    paddingTop: 32,
+    paddingHorizontal: 32,
   },
   iconEdit: {
     position: "absolute",
     right: 0,
   },
+  input: {
+    marginBottom: 8,
+  },
   image: {
     width: 302,
     height: 302,
     borderRadius: 302 / 2,
-    marginBottom: 16,
+    marginBottom: 32,
+  },
+  passwordText: {
+    width: 302,
+    marginBottom: 24,
   },
   button: {
     marginTop: 8,

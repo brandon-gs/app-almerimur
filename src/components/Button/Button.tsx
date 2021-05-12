@@ -9,15 +9,11 @@ function Button({
   loading,
   disabled,
   style,
+  type,
   ...props
 }: ButtonProps) {
-  const isDisabled = loading || disabled;
-
-  const stylesDisabled = isDisabled
-    ? {
-        backgroundColor: "#76797B",
-      }
-    : {};
+  const isDisabled = Boolean(loading || disabled);
+  const stylesDisabled = getDisabledStyles(isDisabled);
 
   return (
     <TouchableOpacity
@@ -30,5 +26,12 @@ function Button({
     </TouchableOpacity>
   );
 }
+
+const getDisabledStyles = (disabled: boolean) => {
+  if (disabled) {
+    return { backgroundColor: "#76797B" };
+  }
+  return {};
+};
 
 export default Button;

@@ -20,6 +20,7 @@ export const persistor = persistStore(store);
 interface RootState {
   user: User;
   message: MessageState;
+  loader: LoaderState;
 }
 
 declare module "react-redux" {

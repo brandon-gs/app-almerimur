@@ -22,6 +22,7 @@ import { theme } from "./theme";
 import actions from "store/actions";
 // Permissions
 import * as ImagePicker from "expo-image-picker";
+import Loader from "./components/Loader";
 
 const Stack = createStackNavigator();
 
@@ -58,47 +59,52 @@ function App() {
 }
 
 function RootNavigation() {
-  const disaptch = useDispatch();
+  const dispatch = useDispatch();
   const navigation = useRef<NavigationContainerRef>(null);
   const { token, name } = useSelector((state) => state.user);
 
   const handleLogout = () => {
     if (navigation.current) {
-      disaptch(actions.logout());
+      dispatch(actions.enableLoader());
+      dispatch(actions.logout());
       navigation.current.navigate("Login");
+      dispatch(actions.disableLoader());
     }
   };
 
   const initialRoute = Boolean(token) ? "Logged" : "Login";
 
   return (
-    <NavigationContainer ref={navigation}>
-      <Stack.Navigator
-        initialRouteName={initialRoute}
-        screenOptions={{
-          headerStyle: {
-            height: 88,
-            backgroundColor: theme.colors.secondary,
-          },
-          headerTitle: (props) => (
-            <Header
-              name={name ? name : "Default"}
-              logout={handleLogout}
-              {...props}
-            />
-          ),
-        }}
-      >
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerShown: false,
+    <>
+      <Loader />
+      <NavigationContainer ref={navigation}>
+        <Stack.Navigator
+          initialRouteName={initialRoute}
+          screenOptions={{
+            headerStyle: {
+              height: 88,
+              backgroundColor: theme.colors.secondary,
+            },
+            headerTitle: (props) => (
+              <Header
+                name={name ? name : "Default"}
+                logout={handleLogout}
+                {...props}
+              />
+            ),
           }}
-        />
-        <Stack.Screen name="Logged" component={LoggedTab} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        >
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Logged" component={LoggedTab} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 

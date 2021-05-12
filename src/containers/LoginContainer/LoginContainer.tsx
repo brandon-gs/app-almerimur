@@ -25,6 +25,7 @@ function LoginContainer() {
   const resetValues = () => setValues(defaultValues);
 
   const handleSubmit = async () => {
+    thunkDispatch(actions.enableLoader());
     const { error, message } = await thunkDispatch(actions.login(values));
     if (error) {
       setMessage({ show: true, message });
@@ -32,6 +33,7 @@ function LoginContainer() {
       navigation.navigate("Logged");
       resetValues();
     }
+    thunkDispatch(actions.disableLoader());
   };
 
   return (

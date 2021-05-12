@@ -14,6 +14,7 @@ export enum Routes {
   Login = "Login",
   History = "History",
   Profile = "Profile",
+  ChangePassword = "ChangePassword",
 }
 
 const Tab = createBottomTabNavigator();
@@ -39,14 +40,19 @@ function LoggedTab() {
         options={{ tabBarLabel: "Home", tabBarVisible: true }}
       />
       <Tab.Screen
+        name={Routes.History}
+        component={HistoryScreen}
+        options={{ tabBarLabel: "Histórico", tabBarVisible: true }}
+      />
+      <Tab.Screen
         name={Routes.CreateWork}
         component={CreateWorkScreen}
         options={{ tabBarLabel: "CrearWork", tabBarVisible: false }}
       />
       <Tab.Screen
-        name={Routes.History}
+        name={Routes.ChangePassword}
         component={HistoryScreen}
-        options={{ tabBarLabel: "Histórico", tabBarVisible: true }}
+        options={{ tabBarLabel: "Histórico", tabBarVisible: false }}
       />
     </Tab.Navigator>
   );

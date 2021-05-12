@@ -17,11 +17,13 @@ import ProfileScreen from "screens/ProfileScreen";
 const Stack = createStackNavigator();
 
 export default function RootNavigation() {
-  const disaptch = useDispatch();
+  const dispatch = useDispatch();
   const { name } = useSelector((state) => state.user);
 
   const handleLogout = () => {
-    disaptch(actions.logout());
+    dispatch(actions.enableLoader());
+    dispatch(actions.logout());
+    dispatch(actions.disableLoader());
   };
 
   return (
@@ -33,11 +35,7 @@ export default function RootNavigation() {
           backgroundColor: theme.colors.secondary,
         },
         headerTitle: (props) => (
-          <Header
-            name={name ? name : "Default"}
-            logout={handleLogout}
-            {...props}
-          />
+          <Header name={name ? name : ""} logout={handleLogout} {...props} />
         ),
       }}
     >
