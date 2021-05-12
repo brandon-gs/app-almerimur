@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
+import { theme } from "theme/";
 import { ITextInputProps } from "./TextInput.types";
 
 function TextInputCustom({
-  color = "#000",
+  color = theme.colors.secondary,
   label = "input",
   error = "",
   value,
@@ -56,6 +57,8 @@ const getStyles = (color: string) =>
       borderColor: color,
       paddingHorizontal: 8,
       fontSize: 16,
+      color: theme.colors.primary,
+      fontWeight: "bold",
     },
     textContainer: {
       position: "absolute",

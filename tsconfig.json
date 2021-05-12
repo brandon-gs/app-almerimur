@@ -1,5 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
+  "include": ["./index.d.ts", "./src"],
   "compilerOptions": {
     "strict": true,
     "baseUrl": "./",
@@ -12,9 +13,10 @@
       "hooks/": ["./src/hooks"],
       "navigation/": ["./src/navigation"],
       "screens/": ["./src/screens/"],
+      "screens/*": ["./src/screens/*"],
       "store/": ["./src/store"],
-      "theme/": ["./src/theme"],
-      "actions/": ["./src/store/actions"]
+      "store/*": ["./src/store/*"],
+      "theme/": ["./src/theme"]
     }
   }
 }

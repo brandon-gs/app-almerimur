@@ -1,17 +1,17 @@
 import thunk from "redux-thunk";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createStore, applyMiddleware } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
-
+import { persistStore } from "redux-persist";
+import persistCombineReducers from "redux-persist/es/persistCombineReducers";
 import rootReducer from "./reducers";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth"],
+  whitelist: ["user"],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistCombineReducers(persistConfig, rootReducer);
 
 export const store = createStore(persistedReducer, applyMiddleware(thunk));
 export const persistor = persistStore(store);
@@ -19,6 +19,7 @@ export const persistor = persistStore(store);
 // Types
 interface RootState {
   user: User;
+  message: MessageState;
 }
 
 declare module "react-redux" {

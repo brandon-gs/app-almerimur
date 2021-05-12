@@ -2,6 +2,7 @@ import { DefaultRootState, useDispatch } from "react-redux";
 
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { ReduxThunkAction } from "src/store/types";
 
 export interface ReduxAction<A> extends Action<string> {
   value: A;
@@ -14,7 +15,7 @@ export type ThunkPromiseAction<R, A = any> = ThunkAction<
   ReduxAction<A>
 >;
 export type ThunkDispatchFunction = <T = any>(
-  action: ThunkPromiseAction<T> | ReduxAction<T>
+  action: ThunkPromiseAction<T> | ReduxAction<T> | ReduxThunkAction
 ) => Promise<T> | T;
 
 export interface ThunkDispatchProp {
@@ -29,6 +30,6 @@ export type ReduxDispatch<S> = ThunkDispatch<
 
 export type StateGetter = () => DefaultRootState;
 
-const useThunkDispatch = () => useDispatch();
+const useThunkDispatch = () => useDispatch() as ThunkDispatchFunction;
 
 export default useThunkDispatch;

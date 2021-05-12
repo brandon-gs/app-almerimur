@@ -1,28 +1,46 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 // Redux
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { store, persistor } from "store/";
 import { PersistGate } from "redux-persist/integration/react";
 // Expo config
 import { registerRootComponent } from "expo";
-// Screens
-import { HomeScreen, LoginScreen } from "screens/";
-// Navigation
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 // Components
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from "@react-navigation/native";
+import { Header } from "components/";
+// Navigations
+import { createStackNavigator } from "@react-navigation/stack";
+import LoginScreen from "./screens/LoginScreen";
+import LoggedTab from "./navigation/LoggedTab";
+// Theme
+import { theme } from "./theme";
+// Actions
+import actions from "store/actions";
+// Permissions
+import * as ImagePicker from "expo-image-picker";
 
 const Stack = createStackNavigator();
 
-enum Routes {
-  Home = "Home",
-  Login = "Login",
-}
-
 function App() {
-  const hasAuth = store.getState().user.token;
-  const initialRoute = hasAuth ? Routes.Home : Routes.Login;
+  /** Get permissions to use Gallery */
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert(
+            "Lo sentimos, necesitamos permisos de la camara para que la aplicación funcione correctamente."
+          );
+        }
+      }
+    })();
+  }, []);
 
   const renderLoading = () => (
     <View>
@@ -33,20 +51,54 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={renderLoading()}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName={initialRoute}>
-            <Stack.Screen
-              name={Routes.Login}
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name={Routes.Home} component={HomeScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <RootNavigation />
       </PersistGate>
     </Provider>
+  );
+}
+
+function RootNavigation() {
+  const disaptch = useDispatch();
+  const navigation = useRef<NavigationContainerRef>(null);
+  const { token, name } = useSelector((state) => state.user);
+
+  const handleLogout = () => {
+    if (navigation.current) {
+      disaptch(actions.logout());
+      navigation.current.navigate("Login");
+    }
+  };
+
+  const initialRoute = Boolean(token) ? "Logged" : "Login";
+
+  return (
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{
+          headerStyle: {
+            height: 88,
+            backgroundColor: theme.colors.secondary,
+          },
+          headerTitle: (props) => (
+            <Header
+              name={name ? name : "Default"}
+              logout={handleLogout}
+              {...props}
+            />
+          ),
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Logged" component={LoggedTab} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Button, TextInput } from "components/";
+import { Button, Message, TextInput } from "components/";
 import { theme } from "theme/";
 import { useThunkDispatch } from "hooks/";
-import actions from "actions/";
+import actions from "store/actions/";
 import { useNavigation } from "@react-navigation/core";
+import { MessageTypes } from "store/reducers/message";
 
 const defaultValues: LoginForm = {
   email: "",
@@ -12,31 +13,41 @@ const defaultValues: LoginForm = {
 };
 
 function LoginContainer() {
-  const navigator = useNavigation();
+  const navigation = useNavigation();
   const thunkDispatch = useThunkDispatch();
-
   const [values, setValues] = useState<LoginForm>(defaultValues);
+  const [message, setMessage] = useState({ show: false, message: "" });
 
   const handleChangeValue = (key: string) => (value: string) => {
     setValues({ ...values, [key]: value });
   };
 
-  const handleSubmit = () => {
-    // TODO: Do api call
-    console.log("submit values");
-    console.log(values);
-    // TODO: set errors
-    thunkDispatch(actions.login());
-    navigator.navigate("Home");
+  const resetValues = () => setValues(defaultValues);
+
+  const handleSubmit = async () => {
+    const { error, message } = await thunkDispatch(actions.login(values));
+    if (error) {
+      setMessage({ show: true, message });
+    } else {
+      navigation.navigate("Logged");
+      resetValues();
+    }
   };
 
   return (
     <View style={styles.root}>
+      <Message
+        message={message.message}
+        show={message.show}
+        type={MessageTypes.Danger}
+        onPress={() => setMessage({ ...message, show: false })}
+      />
       <View style={styles.logoContainer}>
         <Image source={require("assets/logo.webp")} style={styles.logo} />
       </View>
       <View style={styles.formContainer}>
         <TextInput
+          keyboardType="email-address"
           style={styles.textField}
           label="Correo"
           color={theme.colors.secondary}
@@ -44,16 +55,21 @@ function LoginContainer() {
           onChangeText={handleChangeValue("email")}
         />
         <TextInput
-          style={styles.textField}
           label="Contraseña"
+          style={styles.textField}
           color={theme.colors.secondary}
           value={values.password}
           onChangeText={handleChangeValue("password")}
           onSubmitEditing={handleSubmit}
+          secureTextEntry
         />
         <Button
           text="Entrar"
-          styleText={{ color: theme.colors.light, size: 2.5 }}
+          styleText={{
+            color: theme.colors.light,
+            size: 2.5,
+            children: "Entrar",
+          }}
           style={styles.button}
           onPress={handleSubmit}
         />

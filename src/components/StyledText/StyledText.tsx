@@ -6,13 +6,12 @@ function StyledText({
   align,
   color = "#000",
   size = 2,
-  children = "text",
+  children,
   style,
   ...props
 }: StyledTextProps) {
   return (
     <Text
-      {...props}
       style={[
         {
           color,
@@ -21,6 +20,7 @@ function StyledText({
         },
         style,
       ]}
+      {...props}
     >
       {children}
     </Text>

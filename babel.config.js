@@ -3,6 +3,7 @@ module.exports = function (api) {
   return {
     presets: ["babel-preset-expo"],
     plugins: [
+      "inline-dotenv",
       [
         "module-resolver",
         {
@@ -29,7 +30,6 @@ module.exports = function (api) {
             screens: ["./src/screens/"],
             store: ["./src/store/"],
             theme: ["./src/theme/"],
-            actions: ["./src/store/actions"],
           },
         },
       ],
