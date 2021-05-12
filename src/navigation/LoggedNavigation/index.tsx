@@ -1,0 +1,49 @@
+import React from "react";
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import actions from "store/actions";
+// Screens
+// Navigation
+import { createStackNavigator } from "@react-navigation/stack";
+// Components
+import { Header } from "components/";
+import { theme } from "theme/";
+// Const
+import { Routes } from "../LoggedTab";
+import HomeScreen from "screens/HomeScreen";
+import HistoryScreen from "screens/HistoryScreen";
+import ProfileScreen from "screens/ProfileScreen";
+
+const Stack = createStackNavigator();
+
+export default function RootNavigation() {
+  const disaptch = useDispatch();
+  const { name } = useSelector((state) => state.user);
+
+  const handleLogout = () => {
+    disaptch(actions.logout());
+  };
+
+  return (
+    <Stack.Navigator
+      initialRouteName={Routes.Home}
+      screenOptions={{
+        headerStyle: {
+          height: 88,
+          backgroundColor: theme.colors.secondary,
+        },
+        headerTitle: (props) => (
+          <Header
+            name={name ? name : "Default"}
+            logout={handleLogout}
+            {...props}
+          />
+        ),
+      }}
+    >
+      <Stack.Screen name={Routes.Home} component={HomeScreen} />
+      <Stack.Screen name={Routes.History} component={HistoryScreen} />
+      <Stack.Screen name={Routes.Profile} component={ProfileScreen} />
+    </Stack.Navigator>
+  );
+}
