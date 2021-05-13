@@ -1,4 +1,4 @@
-import { UPDATE_MESSAGE } from "../actions/message";
+import { HIDE_MESSAGE, UPDATE_MESSAGE } from "../actions/message";
 import { AnyAction } from "redux";
 
 export enum MessageTypes {
@@ -20,6 +20,8 @@ const messageReducer = (
   switch (action.type) {
     case UPDATE_MESSAGE:
       return { ...state, ...action.payload };
+    case HIDE_MESSAGE:
+      return { ...state, show: false };
     default:
       return state;
   }

@@ -66,6 +66,8 @@ function RootNavigation() {
   const handleLogout = () => {
     if (navigation.current) {
       dispatch(actions.enableLoader());
+      navigation.current.navigate("Home");
+      dispatch(actions.hideGlobalMessage());
       dispatch(actions.logout());
       navigation.current.navigate("Login");
       dispatch(actions.disableLoader());

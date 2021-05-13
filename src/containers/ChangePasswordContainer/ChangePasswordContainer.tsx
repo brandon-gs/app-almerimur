@@ -20,16 +20,37 @@ const defaultValues: ChangePasswordValues = {
 export default function ChangePasswordContaier() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user);
+  const { show, message, type } = useSelector((state) => state.message);
   const [values, setValues] = useState<ChangePasswordValues>(defaultValues);
 
   const handleChangeValue = (key: keyof ChangePasswordValues) => (
     value: string
   ) => {
     setValues({ ...values, [key]: value });
+    // If message is visible, hide it
+    if (show) {
+      dispatch(actions.hideGlobalMessage());
+    }
   };
 
   const handleSubmit = async () => {
     dispatch(actions.enableLoader());
+    // Validate password
+    const matchPassword = values.newPassword === values.confirmNewPassword;
+
+    if (!matchPassword) {
+      dispatch(
+        actions.updateGlobalMessage({
+          message: "Las contraseñas no coinciden",
+          show: true,
+          type: MessageTypes.Danger,
+        })
+      );
+      dispatch(actions.disableLoader());
+      return;
+    }
+
+    // Do request to change password
     const { error, message } = await actions.changePassword(
       values.newPassword,
       token

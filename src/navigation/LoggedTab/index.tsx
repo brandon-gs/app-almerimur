@@ -8,6 +8,7 @@ import {
   HomeScreen,
   ProfileScreen,
 } from "screens/";
+import { Route } from "@react-navigation/routers";
 
 export enum Routes {
   Home = "Home",
@@ -23,12 +24,12 @@ const Tab = createBottomTabNavigator();
 function LoggedTab() {
   return (
     <Tab.Navigator
+      initialRouteName={Routes.Home}
       tabBar={(props) => <StyledTab {...props} />}
       tabBarOptions={{
         keyboardHidesTabBar: true,
         style: { position: "absolute" },
       }}
-      initialRouteName={Routes.Home}
     >
       <Tab.Screen
         name={Routes.Profile}

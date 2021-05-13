@@ -101,15 +101,14 @@ const updateProfile = (
 
 const changePassword = async (newPassword: string, token: string) => {
   try {
-    await axios.post(
-      "/change_user_password.php",
-      { newPassword },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    const formData = new URLSearchParams();
+    formData.append("newPassword", newPassword);
+    const { data } = await axios.post("/change_user_password.php", formData, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    console.log(data);
     return {
       error: false,
       message: "Contraseña actualizada correctamente.",
