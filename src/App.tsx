@@ -36,7 +36,7 @@ function App() {
         } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
           alert(
-            "Lo sentimos, necesitamos permisos de la camara para que la aplicación funcione correctamente."
+            "Lo sentimos, necesitamos permisos de la galeria para que la aplicación funcione correctamente."
           );
         }
       }

@@ -12,3 +12,6 @@ export * from "./HistoryScreen";
 
 export { default as CreateWorkScreen } from "./CreateWorkScreen";
 export * from "./CreateWorkScreen";
+
+export { default as ChangePasswordScreen } from "./ChangePasswordScreen";
+export * from "./ChangePasswordScreen";

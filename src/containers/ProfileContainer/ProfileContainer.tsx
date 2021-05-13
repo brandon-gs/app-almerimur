@@ -16,9 +16,12 @@ import { MessageTypes } from "store/reducers/message";
 import Edit from "assets/Edit.svg";
 import actions from "store/actions";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
+import { useNavigation } from "@react-navigation/core";
 
 function ProfileContainer() {
+  const navigation = useNavigation();
   const thunkDispatch = useThunkDispatch();
+
   const { image: userImage, name, job, token } = useSelector(
     (state) => state.user
   );
@@ -106,7 +109,6 @@ function ProfileContainer() {
           label="Nombre"
           value={profile.name}
           onChangeText={handleChangeValue("name")}
-          style={styles.input}
         />
         <TextInput
           label="Cargo"
@@ -115,10 +117,14 @@ function ProfileContainer() {
           onSubmitEditing={handleUpdateProfile}
         />
         <View style={styles.passwordText}>
-          <TouchableOpacity>
-            <StyledText color={theme.colors.secondary}>
-              Cambiar contraseña
-            </StyledText>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ChangePassword")}
+          >
+            <View style={styles.passwordBtn}>
+              <StyledText color={theme.colors.secondary}>
+                Cambiar contraseña
+              </StyledText>
+            </View>
           </TouchableOpacity>
         </View>
         <Button
@@ -148,21 +154,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
   },
-  input: {
-    marginBottom: 8,
-  },
   image: {
     width: 302,
     height: 302,
     borderRadius: 302 / 2,
-    marginBottom: 32,
+    marginBottom: 16,
   },
   passwordText: {
     width: 302,
-    marginBottom: 24,
+  },
+  passwordBtn: {
+    width: 160,
+    height: 32,
+    justifyContent: "center",
+    marginLeft: 16,
+    marginBottom: 32,
   },
   button: {
-    marginTop: 8,
     marginBottom: 24,
     backgroundColor: theme.colors.primary,
     width: 302,

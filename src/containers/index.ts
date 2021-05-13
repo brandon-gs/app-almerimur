@@ -12,3 +12,6 @@ export * from "./ProfileContainer";
 
 export { default as CreateWorkContainer } from "./CreateWorkContainer";
 export * from "./CreateWorkContainer";
+
+export { default as ChangePasswordContainer } from "./ChangePasswordContainer";
+export * from "./ChangePasswordContainer";

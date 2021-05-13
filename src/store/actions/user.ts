@@ -99,6 +99,29 @@ const updateProfile = (
   };
 };
 
+const changePassword = async (newPassword: string, token: string) => {
+  try {
+    await axios.post(
+      "/change_user_password.php",
+      { newPassword },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return {
+      error: false,
+      message: "Contraseña actualizada correctamente.",
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: "Error al cambiar la contraseña, intente más tarde.",
+    };
+  }
+};
+
 const logout = (): ReduxThunkAction => {
   return (dispatch) => {
     dispatch({
@@ -112,4 +135,5 @@ export default {
   logout,
   updateProfile,
   uploadImage,
+  changePassword,
 };

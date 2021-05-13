@@ -2,6 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyledTab } from "components/";
 import {
+  ChangePasswordScreen,
   CreateWorkScreen,
   HistoryScreen,
   HomeScreen,
@@ -51,7 +52,7 @@ function LoggedTab() {
       />
       <Tab.Screen
         name={Routes.ChangePassword}
-        component={HistoryScreen}
+        component={ChangePasswordScreen}
         options={{ tabBarLabel: "Histórico", tabBarVisible: false }}
       />
     </Tab.Navigator>
