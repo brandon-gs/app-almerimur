@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 
 export default function RootNavigation() {
   const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.user);
+  const { user_name } = useSelector((state) => state.user);
 
   const handleLogout = () => {
     dispatch(actions.enableLoader());
@@ -35,7 +35,11 @@ export default function RootNavigation() {
           backgroundColor: theme.colors.secondary,
         },
         headerTitle: (props) => (
-          <Header name={name ? name : ""} logout={handleLogout} {...props} />
+          <Header
+            name={user_name ? user_name : " "}
+            logout={handleLogout}
+            {...props}
+          />
         ),
       }}
     >

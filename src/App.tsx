@@ -15,7 +15,7 @@ import { Header } from "components/";
 // Navigations
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
-import LoggedTab from "./navigation/LoggedTab";
+import LoggedTab, { Routes } from "./navigation/LoggedTab";
 // Theme
 import { theme } from "./theme";
 // Actions
@@ -61,27 +61,23 @@ function App() {
 function RootNavigation() {
   const dispatch = useDispatch();
   const navigation = useRef<NavigationContainerRef>(null);
-  const { token, name } = useSelector((state) => state.user);
+  const { token, user_name } = useSelector((state) => state.user);
 
   const handleLogout = () => {
     if (navigation.current) {
       dispatch(actions.enableLoader());
-      navigation.current.navigate("Home");
       dispatch(actions.hideGlobalMessage());
       dispatch(actions.logout());
-      navigation.current.navigate("Login");
       dispatch(actions.disableLoader());
     }
   };
 
-  const initialRoute = Boolean(token) ? "Logged" : "Login";
-
-  return (
+  return Boolean(token) ? (
     <>
       <Loader />
       <NavigationContainer ref={navigation}>
         <Stack.Navigator
-          initialRouteName={initialRoute}
+          initialRouteName={Routes.Home}
           screenOptions={{
             headerStyle: {
               height: 88,
@@ -89,13 +85,22 @@ function RootNavigation() {
             },
             headerTitle: (props) => (
               <Header
-                name={name ? name : "Default"}
+                name={user_name ? user_name : "Default"}
                 logout={handleLogout}
                 {...props}
               />
             ),
           }}
         >
+          <Stack.Screen name="Logged" component={LoggedTab} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+  ) : (
+    <>
+      <Loader />
+      <NavigationContainer ref={navigation}>
+        <Stack.Navigator initialRouteName={Routes.Login}>
           <Stack.Screen
             name="Login"
             component={LoginScreen}
@@ -103,7 +108,6 @@ function RootNavigation() {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Logged" component={LoggedTab} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

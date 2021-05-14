@@ -20,7 +20,7 @@ const defaultValues: ChangePasswordValues = {
 export default function ChangePasswordContaier() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.user);
-  const { show, message, type } = useSelector((state) => state.message);
+  const { show } = useSelector((state) => state.message);
   const [values, setValues] = useState<ChangePasswordValues>(defaultValues);
 
   const handleChangeValue = (key: keyof ChangePasswordValues) => (

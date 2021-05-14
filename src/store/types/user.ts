@@ -1,14 +1,12 @@
 interface User {
-  id_user: string;
-  contract: string;
-  createdAt: Date;
-  email: string;
-  hourly: string;
-  image: string;
-  job: string;
-  name: string;
-  password: string;
-  role: string;
+  user_id: string;
+  user_contract: string;
+  user_email: string;
+  user_hourly: string;
+  user_image: string;
+  user_job: string;
+  user_name: string;
+  user_password: string;
+  user_role: string;
   token: string;
-  updatedAt: Date;
 }

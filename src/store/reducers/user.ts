@@ -7,18 +7,16 @@ import {
 import { AnyAction } from "redux";
 
 const initialState: User = {
-  id_user: "",
-  contract: "",
-  createdAt: new Date(),
-  email: "",
-  hourly: "",
-  image: "",
-  job: "",
-  name: "",
-  password: "",
-  role: "",
+  user_id: "",
+  user_contract: "",
+  user_email: "",
+  user_hourly: "",
+  user_image: "",
+  user_job: "",
+  user_name: "",
+  user_password: "",
+  user_role: "",
   token: "",
-  updatedAt: new Date(),
 };
 
 const userReducer = (state: User = initialState, action: AnyAction) => {

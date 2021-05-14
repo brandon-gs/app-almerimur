@@ -22,11 +22,14 @@ function ProfileContainer() {
   const navigation = useNavigation();
   const thunkDispatch = useThunkDispatch();
 
-  const { image: userImage, name, job, token } = useSelector(
+  const { user_image: userImage, user_name, user_job, token } = useSelector(
     (state) => state.user
   );
 
-  const [profile, setProfile] = useState<ProfileValues>({ name, job });
+  const [profile, setProfile] = useState<ProfileValues>({
+    user_name,
+    user_job,
+  });
   const [image, setImage] = useState<ImageInfo>({
     uri: "",
     height: 0,
@@ -34,7 +37,9 @@ function ProfileContainer() {
   });
 
   const canUpdate = Boolean(
-    image.uri || name !== profile.name || job !== profile.job
+    image.uri ||
+      user_name !== profile.user_name ||
+      user_job !== profile.user_job
   );
 
   const pickImage = async () => {
@@ -57,7 +62,8 @@ function ProfileContainer() {
     // Enable loader
     thunkDispatch(actions.enableLoader());
     // Verify if profile info has a change
-    const changeInfoProfile = name !== profile.name || job !== profile.job;
+    const changeInfoProfile =
+      user_name !== profile.user_name || user_job !== profile.user_job;
     // Initialize default global state message
     let show = false;
     let lastMessage = "Perfil actualizado correctamente.";
@@ -98,8 +104,13 @@ function ProfileContainer() {
         <View>
           {Boolean(image.uri) ? (
             <Image source={{ uri: image.uri }} style={styles.image} />
-          ) : (
+          ) : Boolean(userImage) ? (
             <Image source={{ uri: baseURL + userImage }} style={styles.image} />
+          ) : (
+            <Image
+              source={require("assets/DefaultUser.png")}
+              style={styles.image}
+            />
           )}
           <View style={styles.iconEdit}>
             <Edit onPress={pickImage} />
@@ -107,13 +118,13 @@ function ProfileContainer() {
         </View>
         <TextInput
           label="Nombre"
-          value={profile.name}
-          onChangeText={handleChangeValue("name")}
+          value={profile.user_name}
+          onChangeText={handleChangeValue("user_name")}
         />
         <TextInput
           label="Cargo"
-          value={profile.job}
-          onChangeText={handleChangeValue("job")}
+          value={profile.user_job}
+          onChangeText={handleChangeValue("user_job")}
           onSubmitEditing={handleUpdateProfile}
         />
         <View style={styles.passwordText}>
@@ -149,6 +160,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 32,
     paddingHorizontal: 32,
+    backgroundColor: theme.colors.light,
   },
   iconEdit: {
     position: "absolute",
