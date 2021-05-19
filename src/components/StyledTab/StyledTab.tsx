@@ -118,6 +118,7 @@ function StyledTab({ state, descriptors, navigation }: StyledTabProps) {
                 type: MessageTypes.Danger,
               })
             );
+            dispatch(actions.hideModal());
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name);
             }

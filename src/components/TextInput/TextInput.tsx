@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { View, TextInput, Text, StyleSheet, BackHandler } from "react-native";
+import { View, TextInput, Text, StyleSheet } from "react-native";
 import { theme } from "theme/";
 import StyledText from "../StyledText";
 import { ITextInputProps } from "./TextInput.types";
@@ -8,6 +8,7 @@ function TextInputCustom({
   color = theme.colors.secondary,
   label = "input",
   labelAlign = "center",
+  labelError = false,
   error = "",
   value,
   style,
@@ -15,7 +16,7 @@ function TextInputCustom({
 }: ITextInputProps) {
   const currentColor = error ? "#FF0000" : color;
 
-  const styles = getStyles(currentColor, labelAlign);
+  const styles = getStyles(currentColor, labelAlign, labelError);
   const textInputRef = useRef<any>();
 
   const [moveLabel, setMoveLabel] = React.useState(false);
@@ -27,8 +28,11 @@ function TextInputCustom({
   return (
     <View style={style}>
       <View style={styles.root}>
-        {Boolean(label && moveLabel) && (
-          <StyledText color={theme.colors.secondary} style={styles.labelUp}>
+        {Boolean((label && moveLabel) || (label && value) || labelError) && (
+          <StyledText
+            color={labelError ? theme.colors.error : theme.colors.secondary}
+            style={styles.labelUp}
+          >
             {label}
           </StyledText>
         )}
@@ -41,7 +45,7 @@ function TextInputCustom({
           {...props}
         />
         {/** Label */}
-        {Boolean(!value && !moveLabel) && (
+        {Boolean(!value && !moveLabel && !labelError) && (
           <View style={styles.textContainer} onTouchStart={handleTouchLabel}>
             <Text style={styles.text}>{label}</Text>
           </View>
@@ -54,7 +58,7 @@ function TextInputCustom({
   );
 }
 
-const getStyles = (color: string, labelAlign: string) =>
+const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
   StyleSheet.create({
     root: {
       position: "relative",
@@ -64,7 +68,7 @@ const getStyles = (color: string, labelAlign: string) =>
       width: 302,
       height: 40,
       borderWidth: 1,
-      borderColor: color,
+      borderColor: labelError ? theme.colors.error : color,
       paddingHorizontal: 8,
       fontSize: 16,
       color: theme.colors.primary,
