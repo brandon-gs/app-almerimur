@@ -1,3 +1,3 @@
 interface ListWorksProps {
-  works: Array<WorkProps>;
+  works: WorksState;
 }

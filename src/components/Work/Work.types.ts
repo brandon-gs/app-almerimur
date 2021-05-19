@@ -1,5 +1,5 @@
 interface WorkProps {
-  _id: string;
+  id: number;
   title: string;
   enabled: boolean;
 }

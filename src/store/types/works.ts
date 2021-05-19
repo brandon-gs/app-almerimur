@@ -21,7 +21,7 @@ interface MechanicWork {
   mechanic_work_machine_name: string | null;
   mechanic_work_created_at: Date | null;
   mechanic_work_works: string | null;
-  driver_work_finished: boolean;
+  mechanic_work_finished: boolean;
 }
 
 type MechanicWorksState = MechanicWork[];

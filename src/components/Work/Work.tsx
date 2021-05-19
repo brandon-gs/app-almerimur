@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { theme } from "theme/";
 import StyledText from "../StyledText";
 
-function Work({ title, enabled }: WorkProps) {
+function Work({ title, enabled, id }: WorkProps) {
   const styleRoot = enabled ? styles.enabled : styles.disabled;
   const styleText = enabled ? styles.textEnabled : styles.textDisabled;
 
@@ -12,6 +12,7 @@ function Work({ title, enabled }: WorkProps) {
     <TouchableOpacity
       disabled={!enabled}
       style={[styles.defaultRoot, styleRoot]}
+      onPress={() => console.log(id)}
     >
       <StyledText style={styleText} size={2.1}>
         {title}

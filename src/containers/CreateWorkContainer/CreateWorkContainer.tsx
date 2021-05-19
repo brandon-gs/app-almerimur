@@ -30,7 +30,7 @@ function CreateWork() {
   /** Function that create a work and executes when press accept on modal */
   const createWork = async () => {
     const { error, message } = await thunkDispatch(
-      actions.createDriverWork(token, user_role, values)
+      actions.createDriverWork(token, values)
     );
     thunkDispatch(
       actions.updateGlobalMessage({

@@ -3,28 +3,41 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Background, Button, ListWorks } from "components/";
 import { theme } from "theme/";
 import { useNavigation } from "@react-navigation/core";
-
-const data: Array<WorkProps> = [
-  {
-    _id: "1",
-    enabled: true,
-    title: "Trabajo 1",
-  },
-  {
-    _id: "2",
-    enabled: false,
-    title: "Trabajo 2",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { useThunkDispatch } from "hooks/";
+import actions from "store/actions";
 
 function HomeContainer() {
-  const { navigate } = useNavigation();
+  const dispatch = useDispatch();
+  const thunkDispatch = useThunkDispatch();
+  const { navigate, addListener } = useNavigation();
+
+  const {
+    user: { token, user_role },
+    works,
+  } = useSelector((state) => state);
+
+  React.useEffect(() => {
+    const getWorks = async () => {
+      dispatch(actions.enableLoader());
+      if (user_role === "Conductor") {
+        await thunkDispatch(actions.getDriverWorks(token));
+      } else {
+        console.log("Do api call to get mechanic works");
+      }
+      dispatch(actions.disableLoader());
+    };
+
+    addListener("focus", async () => {
+      await getWorks();
+    });
+  });
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <Background />
       <ScrollView style={{ flex: 1 }}>
-        <ListWorks works={data} />
+        <ListWorks works={works} />
       </ScrollView>
       <Button
         text="Crear un nuevo trabajo"

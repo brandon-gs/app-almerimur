@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { UPDATE_WORKS } from "../actions/works";
 
 const initialState: WorksState = [];
 
@@ -7,6 +8,8 @@ const clientsReducer = (
   action: AnyAction
 ) => {
   switch (action.type) {
+    case UPDATE_WORKS:
+      return [...state, ...action.payload];
     default:
       return state;
   }
