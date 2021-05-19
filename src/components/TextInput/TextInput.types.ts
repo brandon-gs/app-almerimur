@@ -5,4 +5,5 @@ export interface ITextInputProps extends TextInputProps {
   style?: ViewStyle;
   error?: string;
   label: string;
+  labelAlign?: "center" | "left";
 }

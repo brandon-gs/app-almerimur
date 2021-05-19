@@ -99,7 +99,7 @@ function ProfileContainer() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }}>
       <View style={styles.root}>
         <View>
           {Boolean(image.uri) ? (

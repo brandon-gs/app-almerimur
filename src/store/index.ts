@@ -21,6 +21,10 @@ interface RootState {
   user: User;
   message: MessageState;
   loader: LoaderState;
+  clients: ClientsState;
+  projects: ProjectsState;
+  works: WorksState;
+  modal: ModalState;
 }
 
 declare module "react-redux" {

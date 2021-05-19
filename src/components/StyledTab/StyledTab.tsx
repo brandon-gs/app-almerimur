@@ -13,6 +13,7 @@ import Message from "../Message";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "store/actions";
 import { MessageTypes } from "store/reducers/message";
+import Modal from "../Modal";
 
 interface StyledTabProps extends BottomTabBarProps<BottomTabBarOptions> {}
 
@@ -71,6 +72,7 @@ function StyledTab({ state, descriptors, navigation }: StyledTabProps) {
         type={type}
         onPress={onPressMessage}
       />
+      <Modal />
       <View
         style={{
           flexDirection: "row",

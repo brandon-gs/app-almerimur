@@ -83,6 +83,9 @@ function RootNavigation() {
               height: 88,
               backgroundColor: theme.colors.secondary,
             },
+            cardStyle: {
+              backgroundColor: theme.colors.light,
+            },
             headerTitle: (props) => (
               <Header
                 name={user_name ? user_name : "Default"}

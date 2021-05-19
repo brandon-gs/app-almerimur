@@ -30,3 +30,9 @@ export * from "./StyledTab";
 
 export { default as SelectInput } from "./SelectInput";
 export * from "./SelectInput";
+
+export { default as DateInput } from "./DateInput";
+export * from "./DateInput";
+
+export { default as Modal } from "./Modal";
+export * from "./Modal";

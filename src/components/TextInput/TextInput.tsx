@@ -1,11 +1,13 @@
 import React, { useRef } from "react";
-import { View, TextInput, Text, StyleSheet } from "react-native";
+import { View, TextInput, Text, StyleSheet, BackHandler } from "react-native";
 import { theme } from "theme/";
+import StyledText from "../StyledText";
 import { ITextInputProps } from "./TextInput.types";
 
 function TextInputCustom({
   color = theme.colors.secondary,
   label = "input",
+  labelAlign = "center",
   error = "",
   value,
   style,
@@ -13,8 +15,10 @@ function TextInputCustom({
 }: ITextInputProps) {
   const currentColor = error ? "#FF0000" : color;
 
-  const styles = getStyles(currentColor);
+  const styles = getStyles(currentColor, labelAlign);
   const textInputRef = useRef<any>();
+
+  const [moveLabel, setMoveLabel] = React.useState(false);
 
   const handleTouchLabel = () => {
     textInputRef.current.focus();
@@ -23,15 +27,21 @@ function TextInputCustom({
   return (
     <View style={style}>
       <View style={styles.root}>
+        {Boolean(label && moveLabel) && (
+          <StyledText color={theme.colors.secondary} style={styles.labelUp}>
+            {label}
+          </StyledText>
+        )}
         <TextInput
+          onBlur={() => setMoveLabel(false)}
+          onFocus={() => setMoveLabel(true)}
           style={styles.textInput}
           value={value}
           ref={textInputRef}
           {...props}
         />
-
         {/** Label */}
-        {!value && (
+        {Boolean(!value && !moveLabel) && (
           <View style={styles.textContainer} onTouchStart={handleTouchLabel}>
             <Text style={styles.text}>{label}</Text>
           </View>
@@ -44,7 +54,7 @@ function TextInputCustom({
   );
 }
 
-const getStyles = (color: string) =>
+const getStyles = (color: string, labelAlign: string) =>
   StyleSheet.create({
     root: {
       position: "relative",
@@ -67,11 +77,15 @@ const getStyles = (color: string) =>
       right: 0,
       bottom: 0,
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: labelAlign === "center" ? "center" : "flex-start",
+      paddingLeft: labelAlign !== "center" ? 8 : 0,
     },
     text: {
       color: color,
       fontSize: 16,
+    },
+    labelUp: {
+      marginBottom: 8,
     },
     textError: {
       color: color,

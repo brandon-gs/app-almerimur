@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { theme } from "theme/";
 import StyledText from "../StyledText";
 
@@ -7,72 +14,137 @@ interface SelectInputProps {
   color?: string;
   error?: string;
   value?: string;
+  placeholder?: string;
+  options?: string[];
   style?: ViewStyle;
+  labelError?: boolean;
+  visiblePlaceholder?: boolean;
+  onChange: (value: string) => void;
   defaultValue?: string;
 }
 
 export default function SelectInput({
   color = theme.colors.secondary,
   error = "",
-  value = "Prueba",
+  value = "",
+  placeholder = "",
   defaultValue,
+  labelError = false,
+  options = [],
+  onChange,
   style,
 }: SelectInputProps) {
-  //TODO: pasar options como prop
   const [showOptions, setShowOptions] = useState(false);
-  const options = ["Prueba", "prueba 2", "prueba 3"];
 
+  const hideOptions = () => {
+    if (showOptions) {
+      setShowOptions(false);
+    }
+  };
   const handleShowOptions = () => setShowOptions((show) => !show);
-  const handleSelectOption = () => {
+  const handleSelectOption = (value: string) => {
+    onChange(value);
     setShowOptions(false);
   };
 
   const currentColor = error ? "#FF0000" : color;
-  const styles = getStyles(currentColor);
+  const styles = getStyles(currentColor, value, labelError);
 
   return (
-    <View style={style}>
-      <View style={styles.root}>
-        <TouchableOpacity style={styles.textInput} onPress={handleShowOptions}>
-          {!value ? (
-            <StyledText color={theme.colors.secondary}>Cliente</StyledText>
-          ) : (
+    <>
+      <View style={style}>
+        <View style={styles.root}>
+          {Boolean((placeholder && value) || labelError) && (
             <StyledText
-              color={theme.colors.primary}
-              style={{ fontWeight: "bold" }}
+              color={labelError ? theme.colors.error : theme.colors.secondary}
+              style={styles.visiblePlaceholder}
             >
-              {value}
+              {placeholder}
             </StyledText>
           )}
-          <View style={styles.arrow} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.textInput}
+            onPress={handleShowOptions}
+            onBlur={() => console.log("test")}
+          >
+            {Boolean(!value && !labelError) && (
+              <StyledText color={theme.colors.secondary}>
+                {placeholder}
+              </StyledText>
+            )}
+            {Boolean(value) && (
+              <StyledText
+                color={theme.colors.primary}
+                style={{ fontWeight: "bold" }}
+              >
+                {value}
+              </StyledText>
+            )}
+            <View style={styles.arrow} />
+          </TouchableOpacity>
+        </View>
         {showOptions && (
           <View style={styles.options}>
-            {options.map((option, index) => {
-              const isValueSelected =
-                option === defaultValue || option === value;
-              const textColor = isValueSelected
-                ? theme.colors.light
-                : theme.colors.primary;
-              const viewStyle = isValueSelected
-                ? styles.optionSelected
-                : styles.option;
-              return (
-                <TouchableOpacity
-                  key={`option-${index}`}
-                  style={viewStyle}
-                  onPress={handleSelectOption}
-                >
-                  <StyledText color={textColor} style={{ fontWeight: "bold" }}>
-                    {option}
-                  </StyledText>
-                </TouchableOpacity>
-              );
-            })}
+            <ScrollView>
+              {options.map((option, index) => {
+                const isValueSelected =
+                  option === defaultValue || option === value;
+
+                return (
+                  <Pressable
+                    key={`option-${index}`}
+                    style={({ pressed }) => {
+                      const viewStyle = pressed
+                        ? styles.optionSelected
+                        : styles.option;
+                      return [
+                        {
+                          backgroundColor: isValueSelected
+                            ? theme.colors.primaryLight
+                            : pressed
+                            ? theme.colors.primary
+                            : theme.colors.light,
+                        },
+                        viewStyle,
+                      ];
+                    }}
+                    onPress={() => handleSelectOption(option)}
+                  >
+                    {({ pressed }) => {
+                      let textColor = pressed
+                        ? theme.colors.light
+                        : theme.colors.primary;
+
+                      return (
+                        <StyledText
+                          color={textColor}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {option}
+                        </StyledText>
+                      );
+                    }}
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
           </View>
         )}
       </View>
-    </View>
+      {showOptions && (
+        <Pressable
+          style={{
+            position: "absolute",
+            top: -200,
+            left: 0,
+            width: Dimensions.get("screen").width,
+            height: Dimensions.get("screen").height,
+            zIndex: 100,
+          }}
+          onPress={hideOptions}
+        />
+      )}
+    </>
   );
 }
 
@@ -80,21 +152,25 @@ const option: ViewStyle = {
   height: 40,
   justifyContent: "center",
   paddingHorizontal: 16,
-  borderBottomColor: theme.colors.secondary,
-  borderBottomWidth: 0.2,
+  borderWidth: 0.5,
+  borderColor: theme.colors.secondary,
+  zIndex: 1000,
 };
 
-const getStyles = (color: string) =>
+const getStyles = (color: string, value: string, error: boolean) =>
   StyleSheet.create({
     root: {
       position: "relative",
+    },
+    visiblePlaceholder: {
+      marginBottom: 8,
     },
     textInput: {
       position: "relative",
       width: 302,
       height: 40,
       borderWidth: 1,
-      borderColor: color,
+      borderColor: !error ? color : theme.colors.error,
       paddingHorizontal: 8,
       fontSize: 16,
       justifyContent: "center",
@@ -133,12 +209,13 @@ const getStyles = (color: string) =>
       borderTopColor: theme.colors.primary,
     },
     options: {
+      position: "absolute",
+      alignContent: "flex-end",
+      top: Boolean(value || error) ? 69 : 40,
       width: 301,
-      borderRightWidth: 0.2,
-      borderLeftWidth: 0.2,
-      borderRightColor: theme.colors.secondary,
-      borderLeftColor: theme.colors.secondary,
+      zIndex: 1000,
+      height: 240,
     },
-    option: { ...option, backgroundColor: theme.colors.light },
+    option: { ...option },
     optionSelected: { ...option, backgroundColor: theme.colors.primary },
   });

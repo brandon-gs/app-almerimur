@@ -14,7 +14,7 @@ export default function Background() {
         position: "absolute",
         top: "-7%",
         left: 0,
-        zIndex: -10000,
+        zIndex: -1000,
         backgroundColor: "#FFF",
       }}
     >

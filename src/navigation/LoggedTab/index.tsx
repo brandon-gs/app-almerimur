@@ -8,7 +8,6 @@ import {
   HomeScreen,
   ProfileScreen,
 } from "screens/";
-import { Route } from "@react-navigation/routers";
 
 export enum Routes {
   Home = "Home",
