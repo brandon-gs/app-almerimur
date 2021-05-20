@@ -21,16 +21,7 @@ function StyledTab({ state, descriptors, navigation }: StyledTabProps) {
   const { message, show, type } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
-  const [redirect, setRedirect] = useState<boolean>(true);
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false);
-
-  /** Always redirect to Home */
-  React.useEffect(() => {
-    if (redirect) {
-      navigation.navigate("Home");
-      setRedirect(false);
-    }
-  });
 
   /** Show TabNavigation when keyboard is closed */
   React.useEffect(() => {

@@ -15,3 +15,6 @@ export * from "./CreateWorkContainer";
 
 export { default as ChangePasswordContainer } from "./ChangePasswordContainer";
 export * from "./ChangePasswordContainer";
+
+export { default as FormEditDriverWork } from "./FormEditDriverWork";
+export * from "./FormEditDriverWork";

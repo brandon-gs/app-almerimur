@@ -12,6 +12,7 @@ interface DateInputProps {
   value: Date | null;
   placeholder?: string;
   labelError?: boolean;
+  editable?: boolean;
   style?: ViewStyle;
   visiblePlaceholder?: boolean;
   onChange: (value: Date) => void;
@@ -24,7 +25,7 @@ export default function DateInput({
   value,
   labelError = false,
   placeholder = "",
-  defaultValue,
+  editable = true,
   onChange,
   style,
 }: DateInputProps) {
@@ -62,7 +63,11 @@ export default function DateInput({
             {placeholder}
           </StyledText>
         )}
-        <TouchableOpacity style={styles.textInput} onPress={openPicker}>
+        <TouchableOpacity
+          style={styles.textInput}
+          onPress={openPicker}
+          disabled={!editable}
+        >
           {!value ? (
             !labelError && (
               <StyledText color={theme.colors.secondary}>

@@ -4,6 +4,27 @@ import { ReduxThunkAction } from "store/types";
 export const UPDATE_WORKS = "UPDATE_WORKS";
 export const ADD_WORK = "ADD_WORK";
 
+const getDriverWork = async (token: string, id: number) => {
+  try {
+    const formData = new URLSearchParams();
+    formData.append("id", id + "");
+    const { data } = await axios.post("/driver/get_work.php", formData, {
+      headers: {
+        authorization: token,
+      },
+    });
+    return {
+      error: false,
+      work: data.work[0],
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: "Error al obtener los trabajos, intentelo más tarde.",
+    };
+  }
+};
+
 const getDriverWorks = (token: string): ReduxThunkAction => {
   return async (dispatch) => {
     try {
@@ -67,4 +88,5 @@ const createDriverWork = (
 export default {
   createDriverWork,
   getDriverWorks,
+  getDriverWork,
 };

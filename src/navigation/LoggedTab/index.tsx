@@ -4,6 +4,8 @@ import { StyledTab } from "components/";
 import {
   ChangePasswordScreen,
   CreateWorkScreen,
+  EditDriverWork,
+  FinishedScreen,
   HistoryScreen,
   HomeScreen,
   ProfileScreen,
@@ -12,10 +14,12 @@ import {
 export enum Routes {
   Home = "Home",
   CreateWork = "CreateWork",
+  EditDriverWork = "EditDriverWork",
   Login = "Login",
   History = "History",
   Profile = "Profile",
   ChangePassword = "ChangePassword",
+  FinishStep = "FinishStep",
 }
 
 const Tab = createBottomTabNavigator();
@@ -38,7 +42,11 @@ function LoggedTab() {
       <Tab.Screen
         name={Routes.Home}
         component={HomeScreen}
-        options={{ tabBarLabel: "Home", tabBarVisible: true }}
+        options={{
+          tabBarLabel: "Home",
+          tabBarVisible: true,
+          unmountOnBlur: true,
+        }}
       />
       <Tab.Screen
         name={Routes.History}
@@ -48,12 +56,34 @@ function LoggedTab() {
       <Tab.Screen
         name={Routes.CreateWork}
         component={CreateWorkScreen}
-        options={{ tabBarLabel: "CrearWork", tabBarVisible: false }}
+        options={{
+          tabBarLabel: "CrearWork",
+          tabBarVisible: false,
+        }}
+      />
+      <Tab.Screen
+        name={Routes.EditDriverWork}
+        component={EditDriverWork}
+        options={{
+          tabBarLabel: "EditDriverWork",
+          tabBarVisible: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
+        name={Routes.FinishStep}
+        component={FinishedScreen}
+        initialParams={{ message: "Mensaje por defecto" }}
+        options={{
+          tabBarLabel: "FinishedScreen",
+          tabBarVisible: false,
+          unmountOnBlur: true,
+        }}
       />
       <Tab.Screen
         name={Routes.ChangePassword}
         component={ChangePasswordScreen}
-        options={{ tabBarLabel: "Histórico", tabBarVisible: false }}
+        options={{ tabBarLabel: "Cambiar contraseña", tabBarVisible: false }}
       />
     </Tab.Navigator>
   );

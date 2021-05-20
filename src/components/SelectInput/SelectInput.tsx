@@ -16,6 +16,7 @@ interface SelectInputProps {
   value?: string;
   placeholder?: string;
   options?: string[];
+  editable?: boolean;
   style?: ViewStyle;
   labelError?: boolean;
   visiblePlaceholder?: boolean;
@@ -30,6 +31,7 @@ export default function SelectInput({
   placeholder = "",
   defaultValue,
   labelError = false,
+  editable = true,
   options = [],
   onChange,
   style,
@@ -65,7 +67,7 @@ export default function SelectInput({
           <TouchableOpacity
             style={styles.textInput}
             onPress={handleShowOptions}
-            onBlur={() => console.log("test")}
+            disabled={!editable}
           >
             {Boolean(!value && !labelError) && (
               <StyledText color={theme.colors.secondary}>
@@ -139,7 +141,7 @@ export default function SelectInput({
             left: 0,
             width: Dimensions.get("screen").width,
             height: Dimensions.get("screen").height,
-            zIndex: 100,
+            zIndex: 1000,
           }}
           onPress={hideOptions}
         />
@@ -154,7 +156,7 @@ const option: ViewStyle = {
   paddingHorizontal: 16,
   borderWidth: 0.5,
   borderColor: theme.colors.secondary,
-  zIndex: 1000,
+  zIndex: 1011,
 };
 
 const getStyles = (color: string, value: string, error: boolean) =>
@@ -213,7 +215,7 @@ const getStyles = (color: string, value: string, error: boolean) =>
       alignContent: "flex-end",
       top: Boolean(value || error) ? 69 : 40,
       width: 301,
-      zIndex: 1000,
+      zIndex: 1010,
       height: 240,
     },
     option: { ...option },

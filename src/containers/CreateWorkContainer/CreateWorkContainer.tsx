@@ -17,7 +17,7 @@ function CreateWork() {
   const navigation = useNavigation();
 
   const {
-    user: { token, user_role },
+    user: { token },
     modal: { isOpen },
     clients,
     projects,
@@ -32,16 +32,19 @@ function CreateWork() {
     const { error, message } = await thunkDispatch(
       actions.createDriverWork(token, values)
     );
-    thunkDispatch(
-      actions.updateGlobalMessage({
-        message: message,
-        show: true,
-        type: error ? MessageTypes.Danger : MessageTypes.Success,
-      })
-    );
-    // Reset values and errors
-    setValues(defaultValues);
-    setErrors(defaultErrors);
+    if (error) {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: message,
+          show: true,
+          type: MessageTypes.Danger,
+        })
+      );
+    } else {
+      navigation.navigate("FinishStep", {
+        message: "Tu trabajo se ha creado correctamente",
+      });
+    }
   };
 
   /** Function to execute when decline the modal */
@@ -65,7 +68,12 @@ function CreateWork() {
       dispatch(actions.setModalDecline(closeModal));
       updateErrors(defaultErrors);
     });
-  }, [errors]);
+    navigation.addListener("blur", () => {
+      setValues(defaultValues);
+      setErrors(defaultErrors);
+      setFirstTime(true);
+    });
+  }, [errors, values]);
 
   const handleOnChangeSelect = (name: keyof CreateWorkForm) => (
     value: string | Date

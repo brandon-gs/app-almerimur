@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import Work from "../Work";
 
 function instanceOfA(object: any): object is DriverWork {
@@ -7,36 +8,41 @@ function instanceOfA(object: any): object is DriverWork {
 }
 
 function ListWorks({ works }: ListWorksProps) {
-  const [currentWorks, setCurrentWorks] = React.useState(works);
-
-  React.useEffect(() => {
-    setCurrentWorks(works);
-  }, [works]);
+  const RenderItem = ({
+    item,
+    index,
+  }: {
+    index: number;
+    item: DriverWork | MechanicWork;
+  }) => {
+    const work = item;
+    if (instanceOfA(work)) {
+      return (
+        <Work
+          key={work.driver_work_id}
+          title={`Trabajo ${works.length - index}`}
+          id={work.driver_work_id}
+          enabled={work.driver_work_finished}
+        />
+      );
+    }
+    return (
+      <Work
+        key={work.mechanic_work_id}
+        title={`Trabajo ${index + 1}`}
+        id={work.mechanic_work_id}
+        enabled={work.mechanic_work_finished}
+      />
+    );
+  };
 
   return (
     <View style={styles.root}>
-      {currentWorks
-        .reverse()
-        .map((work: DriverWork | MechanicWork, index: number) => {
-          if (instanceOfA(work)) {
-            return (
-              <Work
-                key={work.driver_work_id}
-                title={`Trabajo ${currentWorks.length - index}`}
-                id={work.driver_work_id}
-                enabled={work.driver_work_finished}
-              />
-            );
-          }
-          return (
-            <Work
-              key={work.mechanic_work_id}
-              title={`Trabajo ${index + 1}`}
-              id={work.mechanic_work_id}
-              enabled={work.mechanic_work_finished}
-            />
-          );
-        })}
+      <FlatList
+        data={works}
+        renderItem={RenderItem}
+        keyExtractor={(_, index) => index.toString()}
+      />
     </View>
   );
 }

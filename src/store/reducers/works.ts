@@ -9,7 +9,7 @@ const clientsReducer = (
 ) => {
   switch (action.type) {
     case UPDATE_WORKS:
-      return [...state, ...action.payload];
+      return action.payload;
     default:
       return state;
   }

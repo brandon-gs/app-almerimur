@@ -15,3 +15,9 @@ export * from "./CreateWorkScreen";
 
 export { default as ChangePasswordScreen } from "./ChangePasswordScreen";
 export * from "./ChangePasswordScreen";
+
+export { default as EditDriverWork } from "./EditDriverWork";
+export * from "./EditDriverWork";
+
+export { default as FinishedScreen } from "./FinishedScreen";
+export * from "./FinishedScreen";
