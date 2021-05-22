@@ -9,7 +9,7 @@ interface DriverWork {
   driver_work_hours?: number | null;
   driver_work_travels?: number | null;
   driver_work_created_at: string;
-  driver_work_finished: boolean;
+  driver_work_finished: boolean | string;
 }
 
 type DriverWorksState = DriverWork[];

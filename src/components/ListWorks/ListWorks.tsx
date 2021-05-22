@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Work from "../Work";
 
-function instanceOfA(object: any): object is DriverWork {
+export function instanceOfA(object: any): object is DriverWork {
   return "driver_work_id" in object;
 }
 
@@ -22,7 +22,7 @@ function ListWorks({ works }: ListWorksProps) {
           key={work.driver_work_id}
           title={`Trabajo ${works.length - index}`}
           id={work.driver_work_id}
-          enabled={work.driver_work_finished}
+          enabled={work.driver_work_finished === "0"}
         />
       );
     }

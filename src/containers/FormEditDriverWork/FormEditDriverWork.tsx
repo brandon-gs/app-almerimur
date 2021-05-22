@@ -101,11 +101,15 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
 
   const enableEditMode = () => setEditable(true);
 
-  const closeWork = () => {
-    // Do api call to change finished to true
-    navigation.navigate("FinishStep", {
-      message: "Has cerrado tu trabajo correctamente",
-    });
+  const closeWork = async () => {
+    try {
+      await thunkDispatch(actions.finishDriverWork(token, id));
+      navigation.navigate("FinishStep", {
+        message: "Has cerrado tu trabajo correctamente",
+      });
+    } catch (e) {
+      console.log(JSON.stringify(e));
+    }
   };
 
   return !isVisible || !isLoading ? (
