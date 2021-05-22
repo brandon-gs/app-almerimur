@@ -67,6 +67,8 @@ function RootNavigation() {
     if (navigation.current) {
       dispatch(actions.enableLoader());
       dispatch(actions.hideGlobalMessage());
+      dispatch(actions.hideModal());
+      dispatch(actions.clearWorks());
       dispatch(actions.logout());
       dispatch(actions.disableLoader());
     }

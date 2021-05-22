@@ -1,5 +1,9 @@
 import { AnyAction } from "redux";
-import { FINISH_DRIVER_WORK, UPDATE_WORKS } from "../actions/works";
+import {
+  FINISH_DRIVER_WORK,
+  UPDATE_WORKS,
+  CLEAR_WORKS,
+} from "../actions/works";
 
 const initialState: WorksState = [];
 
@@ -17,6 +21,8 @@ const clientsReducer = (
       }
       return state;
     // return finishWork;
+    case CLEAR_WORKS:
+      return [];
     default:
       return state;
   }

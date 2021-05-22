@@ -2,7 +2,7 @@ import { axios } from "api/";
 import { ReduxThunkAction } from "store/types";
 
 export const UPDATE_WORKS = "UPDATE_WORKS";
-export const ADD_WORK = "ADD_WORK";
+export const CLEAR_WORKS = "CLEAR_WORKS";
 export const FINISH_DRIVER_WORK = "FINISH_WORK";
 
 const getDriverWork = async (token: string, id: number) => {
@@ -148,10 +148,15 @@ const updateDriverWork = async (
   }
 };
 
+const clearWorks = () => ({
+  type: CLEAR_WORKS,
+});
+
 export default {
   createDriverWork,
   getDriverWorks,
   getDriverWork,
   finishDriverWork,
   updateDriverWork,
+  clearWorks,
 };
