@@ -10,6 +10,7 @@ function TextInputCustom({
   labelAlign = "center",
   labelError = false,
   error = "",
+  showTopLabel = true,
   value,
   style,
   ...props
@@ -28,14 +29,15 @@ function TextInputCustom({
   return (
     <View style={style}>
       <View style={styles.root}>
-        {Boolean((label && moveLabel) || (label && value) || labelError) && (
-          <StyledText
-            color={labelError ? theme.colors.error : theme.colors.secondary}
-            style={styles.labelUp}
-          >
-            {label}
-          </StyledText>
-        )}
+        {Boolean((label && moveLabel) || (label && value) || labelError) &&
+          showTopLabel && (
+            <StyledText
+              color={labelError ? theme.colors.error : theme.colors.secondary}
+              style={styles.labelUp}
+            >
+              {label}
+            </StyledText>
+          )}
         <TextInput
           onBlur={() => setMoveLabel(false)}
           onFocus={() => setMoveLabel(true)}

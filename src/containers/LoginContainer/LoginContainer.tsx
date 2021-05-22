@@ -55,8 +55,10 @@ function LoginContainer() {
           color={theme.colors.secondary}
           value={values.email}
           onChangeText={handleChangeValue("email")}
+          showTopLabel={false}
         />
         <TextInput
+          showTopLabel={false}
           label="Contraseña"
           style={styles.textField}
           color={theme.colors.secondary}

@@ -7,4 +7,5 @@ export interface ITextInputProps extends TextInputProps {
   label: string;
   labelAlign?: "center" | "left";
   labelError?: boolean;
+  showTopLabel?: boolean;
 }
