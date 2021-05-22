@@ -109,6 +109,9 @@ function CreateWork() {
       dispatch(actions.showModal());
     } else {
       await createWork();
+      navigation.navigate("FinishStep", {
+        message: "Tu trabajo se ha creado correctamente",
+      });
     }
     // Disable loader
     await thunkDispatch(actions.disableLoader());
@@ -184,6 +187,7 @@ function CreateWork() {
           value={values.comments}
           labelError={errors.comments}
           color={theme.colors.secondary}
+          onSubmitEditing={onSubmit}
           onChangeText={handleOnChangeSelect("comments")}
         />
         <Button

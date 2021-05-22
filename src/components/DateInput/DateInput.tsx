@@ -106,7 +106,8 @@ const getStyles = (color: string, labelError: boolean) =>
       position: "relative",
     },
     visiblePlaceholder: {
-      marginBottom: 8,
+      position: "absolute",
+      top: -8,
     },
     textInput: {
       position: "relative",
@@ -116,6 +117,7 @@ const getStyles = (color: string, labelError: boolean) =>
       borderColor: labelError ? theme.colors.error : color,
       paddingHorizontal: 8,
       fontSize: 16,
+      marginTop: 24,
       justifyContent: "center",
     },
     arrow: {

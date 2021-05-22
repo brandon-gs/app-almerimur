@@ -50,17 +50,13 @@ function LoginContainer() {
       <View style={styles.formContainer}>
         <TextInput
           keyboardType="email-address"
-          style={styles.textField}
           label="Correo"
           color={theme.colors.secondary}
           value={values.email}
           onChangeText={handleChangeValue("email")}
-          showTopLabel={false}
         />
         <TextInput
-          showTopLabel={false}
           label="Contraseña"
-          style={styles.textField}
           color={theme.colors.secondary}
           value={values.password}
           onChangeText={handleChangeValue("password")}
@@ -102,9 +98,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     alignItems: "center",
     paddingTop: 40,
-  },
-  textField: {
-    marginBottom: 12,
   },
   button: {
     marginTop: 16,

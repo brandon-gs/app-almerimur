@@ -73,6 +73,7 @@ const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
       borderColor: labelError ? theme.colors.error : color,
       paddingHorizontal: 8,
       fontSize: 16,
+      marginTop: 24,
       color: theme.colors.primary,
       fontWeight: "bold",
     },
@@ -89,9 +90,11 @@ const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
     text: {
       color: color,
       fontSize: 16,
+      top: 12,
     },
     labelUp: {
-      marginBottom: 8,
+      position: "absolute",
+      top: -8,
     },
     textError: {
       color: color,

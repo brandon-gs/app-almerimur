@@ -41,23 +41,64 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [editable, setEditable] = useState(false);
 
+  const updateWorkOnModal = async () => {
+    const { error, message } = await actions.updateDriverWork(
+      token,
+      values,
+      id
+    );
+    if (error && message) {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: message,
+          show: true,
+          type: MessageTypes.Danger,
+        })
+      );
+    } else {
+      navigation.navigate("FinishStep", {
+        message: "Tu trabajo se ha editado correctamente",
+      });
+      dispatch(actions.hideModal());
+    }
+  };
+
+  /** Function to execute when decline the modal */
+  const closeModal = () => {
+    dispatch(actions.hideModal());
+  };
+
   /** Get clients, projects, machines  */
   React.useEffect(() => {
+    let mounted = true;
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getProjectsFromApi(token));
       const { error, work } = await actions.getDriverWork(token, id);
-      if (error) {
+      if (error && mounted) {
         setApiError(true);
-      } else {
+      } else if (mounted) {
         const _values = formatToDriverValues(work);
         setValues(_values);
       }
       thunkDispatch(actions.disableLoader());
     };
+    // Always getData if change screen
+    navigation.addListener("focus", async () => {
+      await getData();
+      dispatch(actions.setModalDecline(closeModal));
+      if (mounted) {
+        updateErrors(defaultErrors);
+      }
+    });
     getData();
-    setIsLoading(false);
+    if (mounted) {
+      setIsLoading(false);
+    }
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const updateErrors = (_errors: CreateWorkFormError) =>
@@ -93,26 +134,37 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
     if (hasError) {
       dispatch(actions.showModal());
     } else {
-      // TODO: call an update API
+      await actions.updateDriverWork(token, values, id);
+      navigation.navigate("FinishStep", {
+        message: "Tu trabajo se ha editado correctamente",
+      });
+      dispatch(actions.hideModal());
     }
+    dispatch(actions.setModalAccept(updateWorkOnModal));
     // Disable loader
-    await thunkDispatch(actions.disableLoader());
+    thunkDispatch(actions.disableLoader());
   };
 
   const enableEditMode = () => setEditable(true);
 
-  const closeWork = async () => {
+  const finishWork = async () => {
     try {
       await thunkDispatch(actions.finishDriverWork(token, id));
       navigation.navigate("FinishStep", {
         message: "Has cerrado tu trabajo correctamente",
       });
     } catch (e) {
-      console.log(JSON.stringify(e));
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: "Error al cerrar el trabajo, intentelo más tarde.",
+          show: true,
+          type: MessageTypes.Danger,
+        })
+      );
     }
   };
 
-  return !isVisible || !isLoading ? (
+  return !isVisible || (!isLoading && !apiError) ? (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
         <KeyboardAwareScrollView>
@@ -190,6 +242,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               value={values.comments}
               labelError={errors.comments}
               color={theme.colors.secondary}
+              onSubmitEditing={onSubmit}
               onChangeText={handleOnChangeSelect("comments")}
             />
             {editable && (
@@ -214,7 +267,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
           </View>
           <Button
             text="Cerrar trabajo"
-            onPress={closeWork}
+            onPress={finishWork}
             style={styles.button}
             styleText={{
               size: 2.5,

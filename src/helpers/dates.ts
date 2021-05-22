@@ -30,7 +30,7 @@ export const getMonthName = (month: number) => {
 };
 
 export const formatDate = (date: Date) => {
-  const day = date.getDay();
+  const day = date.getDate();
   const month = date.getMonth();
   const year = date.getFullYear();
   return `${day} ${getMonthName(month)} ${year}`;
