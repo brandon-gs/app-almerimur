@@ -11,13 +11,12 @@ function TextInputCustom({
   labelError = false,
   error = "",
   showTopLabel = true,
-  value,
+  value = "",
   style,
   ...props
 }: ITextInputProps) {
   const currentColor = error ? "#FF0000" : color;
 
-  const styles = getStyles(currentColor, labelAlign, labelError);
   const textInputRef = useRef<any>();
 
   const [moveLabel, setMoveLabel] = React.useState(false);
@@ -26,18 +25,23 @@ function TextInputCustom({
     textInputRef.current.focus();
   };
 
+  const showTop =
+    Boolean((label && moveLabel) || (label && value) || labelError) &&
+    showTopLabel;
+
+  const styles = getStyles(currentColor, labelAlign, labelError);
+
   return (
     <View style={style}>
       <View style={styles.root}>
-        {Boolean((label && moveLabel) || (label && value) || labelError) &&
-          showTopLabel && (
-            <StyledText
-              color={labelError ? theme.colors.error : theme.colors.secondary}
-              style={styles.labelUp}
-            >
-              {label}
-            </StyledText>
-          )}
+        {showTop && (
+          <StyledText
+            color={labelError ? theme.colors.error : theme.colors.secondary}
+            style={styles.labelUp}
+          >
+            {label}
+          </StyledText>
+        )}
         <TextInput
           onBlur={() => setMoveLabel(false)}
           onFocus={() => setMoveLabel(true)}
@@ -53,9 +57,11 @@ function TextInputCustom({
           </View>
         )}
       </View>
-      <View style={{ height: 22, width: "100%" }}>
-        {Boolean(error) && <Text style={styles.textError}>{error}</Text>}
-      </View>
+      {Boolean(error) && (
+        <View style={{ height: 22, width: "100%" }}>
+          <Text style={styles.textError}>{error}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -73,7 +79,6 @@ const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
       borderColor: labelError ? theme.colors.error : color,
       paddingHorizontal: 8,
       fontSize: 16,
-      marginTop: 24,
       color: theme.colors.primary,
       fontWeight: "bold",
     },
@@ -90,11 +95,9 @@ const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
     text: {
       color: color,
       fontSize: 16,
-      top: 12,
     },
     labelUp: {
-      position: "absolute",
-      top: -8,
+      marginBottom: 8,
     },
     textError: {
       color: color,

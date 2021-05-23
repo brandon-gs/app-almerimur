@@ -1,14 +1,16 @@
 interface DriverWork {
+  id: number;
   driver_work_id: number;
   driver_work_user_id: number;
   driver_work_client_name?: string | null;
   driver_work_project_name?: string | null;
-  driver_work_date?: Date | null;
+  driver_work_date?: Date | null | string;
   driver_work_vehicle_name?: string | null;
   driver_work_concept?: string | null;
   driver_work_hours?: number | null;
   driver_work_travels?: number | null;
   driver_work_created_at: string;
+  driver_work_comments?: string;
   driver_work_finished: boolean | string;
 }
 
@@ -33,4 +35,11 @@ interface MechanicWorkRechange {
 
 type MechanicWorkRechanges = MechanicWorkRechange[];
 
-type WorksState = DriverWorksState | MechanicWorksState;
+interface DriverWorkDate {
+  driver_work_date: string;
+}
+
+interface WorksState {
+  works: DriverWorksState | MechanicWorksState;
+  dates: Record<string, DriverWorksState | MechanicWorksState>;
+}

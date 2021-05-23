@@ -4,6 +4,7 @@ import { ReduxThunkAction } from "store/types";
 export const UPDATE_WORKS = "UPDATE_WORKS";
 export const CLEAR_WORKS = "CLEAR_WORKS";
 export const FINISH_DRIVER_WORK = "FINISH_WORK";
+export const SET_DRIVER_WORK_DATES = "SET_DRIVER_WORK_DATES";
 
 const getDriverWork = async (token: string, id: number) => {
   try {
@@ -34,9 +35,13 @@ const getDriverWorks = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
+      const responseWorks = data.works ? data.works : [];
+      const works = responseWorks.map((work: DriverWork, index: number) => {
+        return { ...work, id: index };
+      });
       dispatch({
         type: UPDATE_WORKS,
-        payload: data.works,
+        payload: works ? works : [],
       });
       return {
         error: false,
@@ -57,20 +62,22 @@ const createDriverWork = (
   return async (_) => {
     try {
       const body = new FormData();
-      for (const key in work) {
-        const currentKey = key as keyof CreateWorkForm;
-        const currentValue = work[currentKey];
-        if (currentValue) {
-          if (currentKey === "date") {
-            const formatDate = new Date(currentValue)
-              .toISOString()
-              .slice(0, 10);
-            body.append(key, formatDate);
-          } else {
-            body.append(key, currentValue.toString());
+      await Promise.all(
+        Object.keys(work).map((key) => {
+          const currentKey = key as keyof CreateWorkForm;
+          const currentValue = work[currentKey];
+          if (currentValue) {
+            if (currentKey === "date") {
+              const formatDate = new Date(currentValue)
+                .toISOString()
+                .slice(0, 10);
+              body.append(key, formatDate);
+            } else {
+              body.append(key, currentValue.toString());
+            }
           }
-        }
-      }
+        })
+      );
       await axios.post(`/driver/create_work.php`, body, {
         headers: {
           authorization: token,
@@ -119,18 +126,22 @@ const updateDriverWork = async (
 ) => {
   try {
     const body = new FormData();
-    for (const key in work) {
-      const currentKey = key as keyof CreateWorkForm;
-      const currentValue = work[currentKey];
-      if (currentValue) {
-        if (currentKey === "date") {
-          const formatDate = new Date(currentValue).toISOString().slice(0, 10);
-          body.append(key, formatDate);
-        } else {
-          body.append(key, currentValue.toString());
+    await Promise.all(
+      Object.keys(work).map((key) => {
+        const currentKey = key as keyof CreateWorkForm;
+        const currentValue = work[currentKey];
+        if (currentValue) {
+          if (currentKey === "date") {
+            const formatDate = new Date(currentValue)
+              .toISOString()
+              .slice(0, 10);
+            body.append(key, formatDate);
+          } else {
+            body.append(key, currentValue.toString());
+          }
         }
-      }
-    }
+      })
+    );
     body.append("id", id + "");
     await axios.post("/driver/edit_work.php", body, {
       headers: {
@@ -148,6 +159,53 @@ const updateDriverWork = async (
   }
 };
 
+const getDriverWorkDates = (
+  token: string,
+  works: DriverWorksState
+): ReduxThunkAction => {
+  return async (dispatch) => {
+    if (works) {
+      try {
+        const { data } = await axios.get("/driver/get_work_dates.php", {
+          headers: {
+            authorization: token,
+          },
+        });
+        const check = new Set();
+        const filterDateWorks = data.works.filter(
+          (obj: DriverWorkDate) =>
+            !check.has(obj["driver_work_date"]) &&
+            check.add(obj["driver_work_date"])
+        );
+        let projectsByDate: Record<string, any> = {};
+        filterDateWorks.forEach((date: DriverWorkDate) => {
+          projectsByDate[date.driver_work_date] = [];
+          works.forEach((work) => {
+            if (date.driver_work_date === work.driver_work_date) {
+              projectsByDate[date.driver_work_date].push({
+                ...work,
+              });
+            }
+          });
+        });
+        dispatch({
+          type: SET_DRIVER_WORK_DATES,
+          payload: projectsByDate,
+        });
+        return {
+          error: false,
+        };
+      } catch (e) {
+        return {
+          error: true,
+          message:
+            "Error al obtener las fechas de los trabajos, intentelo más tarde.",
+        };
+      }
+    }
+  };
+};
+
 const clearWorks = () => ({
   type: CLEAR_WORKS,
 });
@@ -158,5 +216,6 @@ export default {
   getDriverWork,
   finishDriverWork,
   updateDriverWork,
+  getDriverWorkDates,
   clearWorks,
 };

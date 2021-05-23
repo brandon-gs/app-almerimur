@@ -8,14 +8,13 @@ import { useThunkDispatch } from "hooks/";
 import actions from "store/actions";
 
 function HomeContainer() {
-  const dispatch = useDispatch();
   const thunkDispatch = useThunkDispatch();
   const { navigate } = useNavigation();
 
   const {
     user: { token, user_role },
     loader: { isVisible },
-    works,
+    works: { works },
   } = useSelector((state) => state);
 
   React.useEffect(() => {

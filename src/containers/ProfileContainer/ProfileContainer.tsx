@@ -119,11 +119,13 @@ function ProfileContainer() {
         <TextInput
           label="Nombre"
           value={profile.user_name}
+          style={styles.input}
           onChangeText={handleChangeValue("user_name")}
         />
         <TextInput
           label="Cargo"
           value={profile.user_job}
+          style={styles.input}
           onChangeText={handleChangeValue("user_job")}
           onSubmitEditing={handleUpdateProfile}
         />
@@ -174,13 +176,17 @@ const styles = StyleSheet.create({
   },
   passwordText: {
     width: 302,
+    marginTop: 8,
   },
   passwordBtn: {
     width: 160,
     height: 32,
     justifyContent: "center",
     marginLeft: 16,
-    marginBottom: 32,
+    marginBottom: 24,
+  },
+  input: {
+    marginBottom: 8,
   },
   button: {
     marginBottom: 24,

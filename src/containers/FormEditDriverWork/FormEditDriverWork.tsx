@@ -203,6 +203,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               labelAlign="left"
               editable={editable}
               color={theme.colors.secondary}
+              style={styles.select}
               value={values.vehicle}
               labelError={errors.vehicle}
               onChangeText={handleOnChangeSelect("vehicle")}
@@ -213,6 +214,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               label="Concepto de trabajo"
               color={theme.colors.secondary}
               value={values.concept}
+              style={styles.select}
               labelError={errors.concept}
               onChangeText={handleOnChangeSelect("concept")}
             />
@@ -223,6 +225,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               value={values.hours}
               labelError={errors.hours}
               keyboardType="numeric"
+              style={styles.select}
               color={theme.colors.secondary}
               onChangeText={handleOnChangeSelect("hours")}
             />
@@ -240,6 +243,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               labelAlign="left"
               editable={editable}
               value={values.comments}
+              style={styles.select}
               labelError={errors.comments}
               color={theme.colors.secondary}
               onSubmitEditing={onSubmit}

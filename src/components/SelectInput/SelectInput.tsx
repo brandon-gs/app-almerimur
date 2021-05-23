@@ -13,12 +13,14 @@ import StyledText from "../StyledText";
 interface SelectInputProps {
   color?: string;
   error?: string;
-  value?: string;
+  value?: string | null;
   placeholder?: string;
   options?: string[];
   editable?: boolean;
   style?: ViewStyle;
+  positionOptions?: "absolute" | "relative";
   labelError?: boolean;
+  onPressOption?: (option: string) => void | Promise<void>;
   visiblePlaceholder?: boolean;
   onChange: (value: string) => void;
   defaultValue?: string;
@@ -33,7 +35,9 @@ export default function SelectInput({
   labelError = false,
   editable = true,
   options = [],
+  positionOptions = "absolute",
   onChange,
+  onPressOption,
   style,
 }: SelectInputProps) {
   const [showOptions, setShowOptions] = useState(false);
@@ -50,7 +54,7 @@ export default function SelectInput({
   };
 
   const currentColor = error ? "#FF0000" : color;
-  const styles = getStyles(currentColor, value, labelError);
+  const styles = getStyles(currentColor, value, labelError, positionOptions);
 
   return (
     <>
@@ -110,7 +114,11 @@ export default function SelectInput({
                         viewStyle,
                       ];
                     }}
-                    onPress={() => handleSelectOption(option)}
+                    onPress={() =>
+                      onPressOption
+                        ? onPressOption(option)
+                        : handleSelectOption(option)
+                    }
                   >
                     {({ pressed }) => {
                       let textColor = pressed
@@ -159,13 +167,18 @@ const option: ViewStyle = {
   zIndex: 1011,
 };
 
-const getStyles = (color: string, value: string, error: boolean) =>
+const getStyles = (
+  color: string,
+  value: string | null,
+  error: boolean,
+  positionOptions: "absolute" | "relative"
+) =>
   StyleSheet.create({
     root: {
       position: "relative",
     },
     visiblePlaceholder: {
-      marginBottom: 8,
+      marginBottom: 4,
     },
     textInput: {
       position: "relative",
@@ -211,12 +224,14 @@ const getStyles = (color: string, value: string, error: boolean) =>
       borderTopColor: theme.colors.primary,
     },
     options: {
-      position: "absolute",
+      position: positionOptions,
       alignContent: "flex-end",
-      top: Boolean(value || error) ? 69 : 40,
+      top:
+        positionOptions === "relative" ? 0 : Boolean(value || error) ? 69 : 40,
       width: 301,
       zIndex: 1010,
-      height: 240,
+      height: positionOptions === "relative" ? "auto" : 240,
+      maxHeight: positionOptions === "relative" ? 200 : 240,
     },
     option: { ...option },
     optionSelected: { ...option, backgroundColor: theme.colors.primary },

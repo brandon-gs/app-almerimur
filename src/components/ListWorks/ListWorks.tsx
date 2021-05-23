@@ -20,7 +20,7 @@ function ListWorks({ works }: ListWorksProps) {
       return (
         <Work
           key={work.driver_work_id}
-          title={`Trabajo ${works.length - index}`}
+          title={`Trabajo ${work.id + 1}`}
           id={work.driver_work_id}
           enabled={work.driver_work_finished === "0"}
         />
@@ -39,7 +39,7 @@ function ListWorks({ works }: ListWorksProps) {
   return (
     <View style={styles.root}>
       <FlatList
-        data={works}
+        data={[...works].reverse()}
         renderItem={RenderItem}
         keyExtractor={(_, index) => index.toString()}
       />

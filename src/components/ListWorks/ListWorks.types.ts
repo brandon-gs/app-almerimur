@@ -1,3 +1,3 @@
 interface ListWorksProps {
-  works: WorksState;
+  works: DriverWorksState | MechanicWorksState;
 }

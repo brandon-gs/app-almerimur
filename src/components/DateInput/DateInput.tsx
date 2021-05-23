@@ -33,9 +33,9 @@ export default function DateInput({
   const [show, setShow] = useState(false);
 
   const handleChange = (_: Event, selectedDate?: Date) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
+    const currentDate = selectedDate ? selectedDate : date;
     setDate(currentDate);
+    setShow(Platform.OS === "ios");
     if (currentDate) {
       onChange(currentDate);
     }
@@ -47,10 +47,6 @@ export default function DateInput({
   const openPicker = () => {
     setShow(true);
   };
-
-  if (date) {
-    formatDate(date);
-  }
 
   return (
     <View style={style}>
@@ -88,12 +84,16 @@ export default function DateInput({
 
       {show && (
         <DateTimePicker
-          testID="dateTimePicker"
-          value={date ? date : new Date()}
+          value={value ? value : date ? date : new Date(Date.now())}
           mode="date"
-          display="default"
+          testID="dateTimePicker"
+          display={Platform.OS === "ios" ? "spinner" : "default"}
           minimumDate={new Date()}
-          onChange={(event, date) => handleChange(event, date)}
+          onChange={(event, date) => {
+            if (date) {
+              handleChange(event, date);
+            }
+          }}
         />
       )}
     </View>
@@ -106,8 +106,7 @@ const getStyles = (color: string, labelError: boolean) =>
       position: "relative",
     },
     visiblePlaceholder: {
-      position: "absolute",
-      top: -8,
+      marginBottom: 8,
     },
     textInput: {
       position: "relative",
@@ -117,7 +116,6 @@ const getStyles = (color: string, labelError: boolean) =>
       borderColor: labelError ? theme.colors.error : color,
       paddingHorizontal: 8,
       fontSize: 16,
-      marginTop: 24,
       justifyContent: "center",
     },
     arrow: {

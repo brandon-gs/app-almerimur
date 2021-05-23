@@ -53,12 +53,14 @@ function LoginContainer() {
           label="Correo"
           color={theme.colors.secondary}
           value={values.email}
+          style={styles.input}
           onChangeText={handleChangeValue("email")}
         />
         <TextInput
           label="Contraseña"
           color={theme.colors.secondary}
           value={values.password}
+          style={styles.input}
           onChangeText={handleChangeValue("password")}
           onSubmitEditing={handleSubmit}
           secureTextEntry
@@ -97,7 +99,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: theme.colors.background,
     alignItems: "center",
-    paddingTop: 40,
+    paddingTop: 24,
+  },
+  input: {
+    marginBottom: 16,
   },
   button: {
     marginTop: 16,

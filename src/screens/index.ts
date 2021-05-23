@@ -21,3 +21,6 @@ export * from "./EditDriverWork";
 
 export { default as FinishedScreen } from "./FinishedScreen";
 export * from "./FinishedScreen";
+
+export { default as ReadDriverWork } from "./ReadDriverWork";
+export * from "./ReadDriverWork";

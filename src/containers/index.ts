@@ -18,3 +18,6 @@ export * from "./ChangePasswordContainer";
 
 export { default as FormEditDriverWork } from "./FormEditDriverWork";
 export * from "./FormEditDriverWork";
+
+export { default as ReadFormDriverWork } from "./ReadFormDriverWork";
+export * from "./ReadFormDriverWork";

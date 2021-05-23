@@ -9,6 +9,7 @@ import {
   HistoryScreen,
   HomeScreen,
   ProfileScreen,
+  ReadDriverWork,
 } from "screens/";
 
 export enum Routes {
@@ -20,6 +21,7 @@ export enum Routes {
   Profile = "Profile",
   ChangePassword = "ChangePassword",
   FinishStep = "FinishStep",
+  ReadDriverWork = "ReadDriverWork",
 }
 
 const Tab = createBottomTabNavigator();
@@ -51,7 +53,24 @@ function LoggedTab() {
       <Tab.Screen
         name={Routes.History}
         component={HistoryScreen}
-        options={{ tabBarLabel: "Histórico", tabBarVisible: true }}
+        options={{
+          tabBarLabel: "Histórico",
+          tabBarVisible: true,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
+        name={Routes.ReadDriverWork}
+        component={ReadDriverWork}
+        initialParams={{
+          title: "",
+          work: null,
+        }}
+        options={{
+          tabBarLabel: "ReadDriverWork",
+          tabBarVisible: false,
+          unmountOnBlur: true,
+        }}
       />
       <Tab.Screen
         name={Routes.CreateWork}

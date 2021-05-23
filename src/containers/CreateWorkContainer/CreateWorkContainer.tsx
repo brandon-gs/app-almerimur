@@ -41,6 +41,7 @@ function CreateWork() {
         })
       );
     } else {
+      dispatch(actions.hideModal());
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha creado correctamente",
       });
@@ -64,7 +65,6 @@ function CreateWork() {
     // Always getData if change screen
     navigation.addListener("focus", async () => {
       await getData();
-      dispatch(actions.setModalAccept(createWork));
       dispatch(actions.setModalDecline(closeModal));
       updateErrors(defaultErrors);
     });
@@ -112,7 +112,10 @@ function CreateWork() {
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha creado correctamente",
       });
+      dispatch(actions.hideModal());
     }
+    // Set modal accept function
+    dispatch(actions.setModalAccept(createWork));
     // Disable loader
     await thunkDispatch(actions.disableLoader());
   };
@@ -129,15 +132,15 @@ function CreateWork() {
           placeholder="Cliente"
           options={clients}
           value={values.client}
-          style={styles.select}
           labelError={errors.client}
+          style={styles.select}
           onChange={handleOnChangeSelect("client")}
         />
         <SelectInput
           options={projects}
-          style={styles.select}
           placeholder="Proyecto"
           value={values.project}
+          style={styles.select}
           labelError={errors.project}
           onChange={handleOnChangeSelect("project")}
         />
@@ -153,6 +156,7 @@ function CreateWork() {
           label="Vehículo"
           color={theme.colors.secondary}
           value={values.vehicle}
+          style={styles.select}
           labelError={errors.vehicle}
           onChangeText={handleOnChangeSelect("vehicle")}
         />
@@ -161,6 +165,7 @@ function CreateWork() {
           label="Concepto de trabajo"
           color={theme.colors.secondary}
           value={values.concept}
+          style={styles.select}
           labelError={errors.concept}
           onChangeText={handleOnChangeSelect("concept")}
         />
@@ -170,6 +175,7 @@ function CreateWork() {
           value={values.hours}
           labelError={errors.hours}
           keyboardType="numeric"
+          style={styles.select}
           color={theme.colors.secondary}
           onChangeText={handleOnChangeSelect("hours")}
         />
@@ -187,6 +193,7 @@ function CreateWork() {
           value={values.comments}
           labelError={errors.comments}
           color={theme.colors.secondary}
+          style={styles.select}
           onSubmitEditing={onSubmit}
           onChangeText={handleOnChangeSelect("comments")}
         />
