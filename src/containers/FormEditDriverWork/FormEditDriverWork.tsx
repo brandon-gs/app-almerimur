@@ -84,16 +84,10 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
       }
       thunkDispatch(actions.disableLoader());
     };
-    // Always getData if change screen
-    navigation.addListener("focus", async () => {
-      await getData();
-      dispatch(actions.setModalDecline(closeModal));
-      if (mounted) {
-        updateErrors(defaultErrors);
-      }
-    });
     getData();
+    dispatch(actions.setModalDecline(closeModal));
     if (mounted) {
+      updateErrors(defaultErrors);
       setIsLoading(false);
     }
     return () => {

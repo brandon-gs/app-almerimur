@@ -48,6 +48,10 @@ export default function DateInput({
     setShow(true);
   };
 
+  const closePicker = () => {
+    setShow(Platform.OS === "ios");
+  };
+
   return (
     <View style={style}>
       <View style={styles.root}>
@@ -92,6 +96,8 @@ export default function DateInput({
           onChange={(event, date) => {
             if (date) {
               handleChange(event, date);
+            } else {
+              closePicker();
             }
           }}
         />

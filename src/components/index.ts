@@ -36,3 +36,6 @@ export * from "./DateInput";
 
 export { default as Modal } from "./Modal";
 export * from "./Modal";
+
+export { default as RechangeInput } from "./RechangeInput";
+export * from "./RechangeInput";

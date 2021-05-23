@@ -17,13 +17,23 @@ interface DriverWork {
 type DriverWorksState = DriverWork[];
 
 interface MechanicWork {
+  id: number;
   mechanic_work_id: number;
   mechanic_work_user_id: number;
   mechanic_work_client_name: string | null;
   mechanic_work_machine_name: string | null;
+  mechanic_work_hours: string | null;
   mechanic_work_created_at: Date | null;
   mechanic_work_works: string | null;
-  mechanic_work_finished: boolean;
+  mechanic_work_date?: Date | null | string;
+  mechanic_work_finished: boolean | string;
+  rechanges: MechanicRechangeResponse[] | null;
+}
+interface MechanicRechangeResponse {
+  mechanic_rechange_id: string;
+  mechanic_rechange_number: string;
+  mechanic_rechange_title: string;
+  mechanic_rechange_work_id: string;
 }
 
 type MechanicWorksState = MechanicWork[];
@@ -37,6 +47,10 @@ type MechanicWorkRechanges = MechanicWorkRechange[];
 
 interface DriverWorkDate {
   driver_work_date: string;
+}
+
+interface MechanicWorkDate {
+  mechanic_work_date: string;
 }
 
 interface WorksState {

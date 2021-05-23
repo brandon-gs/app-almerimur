@@ -23,6 +23,8 @@ function HistoryContainer() {
       thunkDispatch(actions.enableLoader());
       if (instanceOfDriverWorks(works)) {
         await thunkDispatch(actions.getDriverWorkDates(token, works));
+      } else {
+        await thunkDispatch(actions.getMechanicWorkDates(token, works));
       }
       thunkDispatch(actions.disableLoader());
     };
@@ -31,11 +33,9 @@ function HistoryContainer() {
   }, []);
 
   const RenderItem = ({ item, index }: { item: string; index: number }) => {
-    const options = dates[item]
-      // .sort((worka: any, workb: any) => workb.id - worka.id)
-      .map((work: any) => {
-        return `Trabajo ${work.id + 1}`;
-      });
+    const options = dates[item].map((work: any) => {
+      return `Trabajo ${work.id + 1}`;
+    });
     return (
       <SelectInput
         key={`${item}-${index}`}

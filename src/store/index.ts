@@ -25,6 +25,7 @@ interface RootState {
   projects: ProjectsState;
   works: WorksState;
   modal: ModalState;
+  machines: MachinesState;
 }
 
 declare module "react-redux" {

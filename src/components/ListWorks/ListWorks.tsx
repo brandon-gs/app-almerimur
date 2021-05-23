@@ -10,7 +10,6 @@ export function instanceOfA(object: any): object is DriverWork {
 function ListWorks({ works }: ListWorksProps) {
   const RenderItem = ({
     item,
-    index,
   }: {
     index: number;
     item: DriverWork | MechanicWork;
@@ -29,9 +28,9 @@ function ListWorks({ works }: ListWorksProps) {
     return (
       <Work
         key={work.mechanic_work_id}
-        title={`Trabajo ${index + 1}`}
+        title={`Trabajo ${work.id + 1}`}
         id={work.mechanic_work_id}
-        enabled={work.mechanic_work_finished}
+        enabled={work.mechanic_work_finished === "0"}
       />
     );
   };

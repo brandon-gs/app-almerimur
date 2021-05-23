@@ -6,6 +6,7 @@ import clients from "./client";
 import projects from "./project";
 import works from "./works";
 import modal from "./modal";
+import machines from "./machine";
 
 const rootReducer = {
   user,
@@ -13,6 +14,7 @@ const rootReducer = {
   loader,
   clients,
   projects,
+  machines,
   works,
   modal,
 };

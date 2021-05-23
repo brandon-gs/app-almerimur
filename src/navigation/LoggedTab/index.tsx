@@ -3,14 +3,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyledTab } from "components/";
 import {
   ChangePasswordScreen,
+  CreateMWorkScreen,
   CreateWorkScreen,
   EditDriverWork,
+  EditMechanicWork,
   FinishedScreen,
   HistoryScreen,
   HomeScreen,
   ProfileScreen,
   ReadDriverWork,
+  ReadMechanicWork,
 } from "screens/";
+import { useSelector } from "react-redux";
 
 export enum Routes {
   Home = "Home",
@@ -27,6 +31,19 @@ export enum Routes {
 const Tab = createBottomTabNavigator();
 
 function LoggedTab() {
+  const {
+    user: { user_role },
+  } = useSelector((state) => state);
+
+  const CreateWork =
+    user_role === "Conductor" ? CreateWorkScreen : CreateMWorkScreen;
+
+  const EditWork =
+    user_role === "Conductor" ? EditDriverWork : EditMechanicWork;
+
+  const ReadWork =
+    user_role === "Conductor" ? ReadDriverWork : ReadMechanicWork;
+
   return (
     <Tab.Navigator
       initialRouteName={Routes.Home}
@@ -61,20 +78,20 @@ function LoggedTab() {
       />
       <Tab.Screen
         name={Routes.ReadDriverWork}
-        component={ReadDriverWork}
+        component={ReadWork}
         initialParams={{
           title: "",
           work: null,
         }}
         options={{
-          tabBarLabel: "ReadDriverWork",
+          tabBarLabel: "ReadWork",
           tabBarVisible: false,
           unmountOnBlur: true,
         }}
       />
       <Tab.Screen
         name={Routes.CreateWork}
-        component={CreateWorkScreen}
+        component={CreateWork}
         options={{
           tabBarLabel: "CrearWork",
           tabBarVisible: false,
@@ -82,7 +99,7 @@ function LoggedTab() {
       />
       <Tab.Screen
         name={Routes.EditDriverWork}
-        component={EditDriverWork}
+        component={EditWork}
         options={{
           tabBarLabel: "EditDriverWork",
           tabBarVisible: false,

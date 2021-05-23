@@ -5,6 +5,7 @@ import client from "./client";
 import project from "./project";
 import works from "./works";
 import modal from "./modal";
+import machine from "./machine";
 
 export default {
   ...user,
@@ -14,4 +15,5 @@ export default {
   ...project,
   ...works,
   ...modal,
+  ...machine,
 };

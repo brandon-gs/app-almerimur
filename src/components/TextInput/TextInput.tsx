@@ -10,8 +10,9 @@ function TextInputCustom({
   labelAlign = "center",
   labelError = false,
   error = "",
-  showTopLabel = true,
+  showTopLabel = false,
   value = "",
+  width = 302,
   style,
   ...props
 }: ITextInputProps) {
@@ -26,10 +27,10 @@ function TextInputCustom({
   };
 
   const showTop =
-    Boolean((label && moveLabel) || (label && value) || labelError) &&
+    Boolean((label && moveLabel) || (label && value) || labelError) ||
     showTopLabel;
 
-  const styles = getStyles(currentColor, labelAlign, labelError);
+  const styles = getStyles(currentColor, labelAlign, labelError, width);
 
   return (
     <View style={style}>
@@ -51,7 +52,7 @@ function TextInputCustom({
           {...props}
         />
         {/** Label */}
-        {Boolean(!value && !moveLabel && !labelError) && (
+        {Boolean(!value && !moveLabel && !labelError && !showTopLabel) && (
           <View style={styles.textContainer} onTouchStart={handleTouchLabel}>
             <Text style={styles.text}>{label}</Text>
           </View>
@@ -66,14 +67,19 @@ function TextInputCustom({
   );
 }
 
-const getStyles = (color: string, labelAlign: string, labelError: boolean) =>
+const getStyles = (
+  color: string,
+  labelAlign: string,
+  labelError: boolean,
+  width: number
+) =>
   StyleSheet.create({
     root: {
       position: "relative",
     },
     textInput: {
       position: "relative",
-      width: 302,
+      width,
       height: 40,
       borderWidth: 1,
       borderColor: labelError ? theme.colors.error : color,

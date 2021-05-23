@@ -24,3 +24,12 @@ export * from "./FinishedScreen";
 
 export { default as ReadDriverWork } from "./ReadDriverWork";
 export * from "./ReadDriverWork";
+
+export { default as CreateMWorkScreen } from "./CreateMWorkScreen";
+export * from "./CreateMWorkScreen";
+
+export { default as EditMechanicWork } from "./EditMechanicWork";
+export * from "./EditMechanicWork";
+
+export { default as ReadMechanicWork } from "./ReadMechanicWork";
+export * from "./ReadMechanicWork";

@@ -22,7 +22,7 @@ function HomeContainer() {
       if (user_role === "Conductor") {
         await thunkDispatch(actions.getDriverWorks(token));
       } else {
-        console.log("Do api call to get mechanic works");
+        await thunkDispatch(actions.getMechanicWorks(token));
       }
     };
     getWorks();

@@ -1,4 +1,10 @@
-import { DateInput, SelectInput, StyledText, TextInput } from "components/";
+import {
+  DateInput,
+  RechangeInput,
+  SelectInput,
+  StyledText,
+  TextInput,
+} from "components/";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -6,7 +12,7 @@ import { theme } from "theme/";
 
 interface ReadFormDriverWorkProps {
   title: string;
-  values: DriverWork;
+  values: MechanicWork;
 }
 
 export default function ReadFormDriverWork({
@@ -23,86 +29,82 @@ export default function ReadFormDriverWork({
         <SelectInput
           placeholder="Cliente"
           options={[]}
-          value={values.driver_work_client_name}
+          value={values.mechanic_work_client_name}
           style={styles.select}
           labelError={false}
-          onChange={onChange}
           editable={false}
+          onChange={onChange}
         />
         <SelectInput
+          options={[]}
+          placeholder="Maquinas"
+          value={values.mechanic_work_machine_name}
           style={styles.select}
-          placeholder="Proyecto"
-          value={values.driver_work_project_name}
+          labelError={false}
           editable={false}
           onChange={onChange}
         />
         <DateInput
           placeholder="Fecha"
-          editable={false}
           style={styles.select}
+          labelError={false}
           value={
-            values.driver_work_date
-              ? new Date(values.driver_work_date)
+            values.mechanic_work_date
+              ? new Date(values.mechanic_work_date)
               : new Date()
           }
+          editable={false}
           onChange={onChange}
         />
         <TextInput
-          label="Vehículo"
           labelAlign="left"
-          editable={false}
-          color={theme.colors.secondary}
-          style={styles.select}
-          value={
-            values.driver_work_vehicle_name
-              ? values.driver_work_vehicle_name
-              : undefined
-          }
-          onChangeText={onChange}
-        />
-        <TextInput
-          labelAlign="left"
-          editable={false}
-          label="Concepto de trabajo"
-          color={theme.colors.secondary}
-          value={
-            values.driver_work_concept ? values.driver_work_concept : undefined
-          }
-          style={styles.select}
-          onChangeText={onChange}
-        />
-        <TextInput
-          editable={false}
           label="Horas"
-          labelAlign="left"
+          color={theme.colors.secondary}
           value={
-            values.driver_work_hours ? values.driver_work_hours + "" : undefined
+            values.mechanic_work_hours ? values.mechanic_work_hours : undefined
           }
           keyboardType="numeric"
           style={styles.select}
-          color={theme.colors.secondary}
-          onChangeText={onChange}
-        />
-        <SelectInput
-          placeholder="Viajes realizados"
+          labelError={false}
           editable={false}
-          value={
-            values.driver_work_travels
-              ? values.driver_work_travels + ""
-              : undefined
-          }
-          style={styles.select}
-          onChange={onChange}
+          onChangeText={onChange}
         />
         <TextInput
-          label="Comentarios"
           labelAlign="left"
-          editable={false}
-          value={values.driver_work_comments}
-          style={styles.select}
+          label="Trabajos"
           color={theme.colors.secondary}
+          value={
+            values.mechanic_work_works ? values.mechanic_work_works : undefined
+          }
+          style={styles.select}
+          labelError={false}
+          editable={false}
           onChangeText={onChange}
         />
+        {values.rechanges &&
+          values.rechanges.map((rechange, index) => {
+            return rechange ? (
+              <RechangeInput
+                showAdd={false}
+                editable={false}
+                key={`rechange-${index}`}
+                index={index}
+                textInput={{
+                  label: "Recambios",
+                  value: rechange.mechanic_rechange_title,
+                  onChange: onChange,
+                }}
+                numberInput={{
+                  label: "#",
+                  value: rechange.mechanic_rechange_number,
+                  onChange: onChange,
+                }}
+                errors={[]}
+                onPressAdd={onChange}
+                style={styles.select}
+              />
+            ) : null;
+          })}
       </View>
     </ScrollView>
   );
