@@ -6,7 +6,7 @@
     "baseUrl": "./",
     "paths": {
       "api/": ["./src/api/"],
-      "assets/*": ["./src/assets/*"],
+      "assets/*": ["./assets/*"],
       "components/": ["./src/components"],
       "containers/": ["./src/containers"],
       "helpers/": ["./src/helpers"],

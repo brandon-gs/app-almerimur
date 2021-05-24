@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 // Redux
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { store, persistor } from "store/";
+import { store, persistor } from "./src/store/";
 import { PersistGate } from "redux-persist/integration/react";
 // Expo config
 import { registerRootComponent } from "expo";
@@ -11,18 +11,18 @@ import {
   NavigationContainer,
   NavigationContainerRef,
 } from "@react-navigation/native";
-import { Header } from "components/";
+import { Header } from "./src/components/";
 // Navigations
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./screens/LoginScreen";
-import LoggedTab, { Routes } from "./navigation/LoggedTab";
+import LoginScreen from "./src/screens/LoginScreen";
+import LoggedTab, { Routes } from "./src/navigation/LoggedTab";
 // Theme
-import { theme } from "./theme";
+import { theme } from "./src/theme";
 // Actions
-import actions from "store/actions";
+import actions from "./src/store/actions";
 // Permissions
 import * as ImagePicker from "expo-image-picker";
-import Loader from "./components/Loader";
+import Loader from "./src/components/Loader";
 
 const Stack = createStackNavigator();
 

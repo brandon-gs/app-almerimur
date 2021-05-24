@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, StyledText, TextInput } from "components/";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { theme } from "theme/";
-import PasswordIcon from "assets/Password.svg";
+import PasswordIcon from "../../../assets/Password.svg";
 import actions from "store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { MessageTypes } from "store/reducers/message";
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: theme.colors.light,
   },
   title: {
     marginTop: 32,

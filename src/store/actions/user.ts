@@ -50,7 +50,7 @@ const uploadImage = (image: ImageInfo, token: string): ReduxThunkAction => {
       const { data } = await axios.post("/update_user_image.php", body, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: token,
+          authorization: token,
         },
       });
       dispatch({ type: UPDATE_USER_IMAGE, payload: data.image });
@@ -74,12 +74,12 @@ const updateProfile = (
 ): ReduxThunkAction => {
   return async (dispatch) => {
     try {
-      const formData = new URLSearchParams();
+      const formData = new FormData();
       formData.append("name", profile.user_name);
       formData.append("job", profile.user_job);
       const { data } = await axios.post("/update_user_profile.php", formData, {
         headers: {
-          Authorization: token,
+          authorization: token,
         },
       });
       dispatch({
@@ -101,11 +101,11 @@ const updateProfile = (
 
 const changePassword = async (newPassword: string, token: string) => {
   try {
-    const formData = new URLSearchParams();
+    const formData = new FormData();
     formData.append("newPassword", newPassword);
     await axios.post("/change_user_password.php", formData, {
       headers: {
-        Authorization: token,
+        authorization: token,
       },
     });
     return {

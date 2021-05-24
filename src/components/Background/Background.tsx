@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import BackgroundIcon from "assets/Background.svg";
-import BackgroundMIcon from "assets/BackgroundMechanic.svg";
+import BackgroundIcon from "../../../assets/Background.svg";
+import BackgroundMIcon from "../../../assets/BackgroundMechanic.svg";
 import { Dimensions, View } from "react-native";
 import { useSelector } from "react-redux";
 

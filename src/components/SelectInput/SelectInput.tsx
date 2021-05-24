@@ -71,7 +71,7 @@ export default function SelectInput({
           <TouchableOpacity
             style={styles.textInput}
             onPress={handleShowOptions}
-            disabled={!editable}
+            disabled={!editable || options.length === 0}
           >
             {Boolean(!value && !labelError) && (
               <StyledText color={theme.colors.secondary}>

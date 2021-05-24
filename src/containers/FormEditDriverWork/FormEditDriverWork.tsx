@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/core";
 import { useThunkDispatch } from "hooks/";
 import { View, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import EditIcon from "assets/Edit.svg";
+import EditIcon from "../../../assets/Edit.svg";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "store/actions";
@@ -56,6 +56,13 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
         })
       );
     } else {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: "",
+          show: false,
+          type: MessageTypes.Danger,
+        })
+      );
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha editado correctamente",
       });

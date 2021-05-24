@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { useThunkDispatch } from "hooks/";
 import * as ImagePicker from "expo-image-picker";
 import { MessageTypes } from "store/reducers/message";
-import Edit from "assets/Edit.svg";
+import Edit from "../../../assets/Edit.svg";
 import actions from "store/actions";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { useNavigation } from "@react-navigation/core";
@@ -70,6 +70,7 @@ function ProfileContainer() {
     let lastError = false;
     // Update image
     if (Boolean(image.uri)) {
+      setImage({ uri: "", height: 0, width: 0 });
       let { message, error } = await thunkDispatch(
         actions.uploadImage(image, token)
       );
@@ -108,7 +109,7 @@ function ProfileContainer() {
             <Image source={{ uri: baseURL + userImage }} style={styles.image} />
           ) : (
             <Image
-              source={require("assets/DefaultUser.png")}
+              source={require("../../../assets/DefaultUser.png")}
               style={styles.image}
             />
           )}
@@ -131,7 +132,16 @@ function ProfileContainer() {
         />
         <View style={styles.passwordText}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("ChangePassword")}
+            onPress={() => {
+              navigation.navigate("ChangePassword");
+              thunkDispatch(
+                actions.updateGlobalMessage({
+                  message: "",
+                  show: false,
+                  type: MessageTypes.Danger,
+                })
+              );
+            }}
           >
             <View style={styles.passwordBtn}>
               <StyledText color={theme.colors.secondary}>

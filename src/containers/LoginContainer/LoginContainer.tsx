@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Button, Message, TextInput } from "components/";
+import { Button, Message, StyledText, TextInput } from "components/";
 import { theme } from "theme/";
 import { useThunkDispatch } from "hooks/";
 import actions from "store/actions/";
 import { useNavigation } from "@react-navigation/core";
 import { MessageTypes } from "store/reducers/message";
+import Constants from "expo-constants";
 
 const defaultValues: LoginForm = {
   email: "",
@@ -45,7 +46,10 @@ function LoginContainer() {
         onPress={() => setMessage({ ...message, show: false })}
       />
       <View style={styles.logoContainer}>
-        <Image source={require("assets/logo.webp")} style={styles.logo} />
+        <Image
+          source={require("../../../assets/logo.webp")}
+          style={styles.logo}
+        />
       </View>
       <View style={styles.formContainer}>
         <TextInput
@@ -65,6 +69,11 @@ function LoginContainer() {
           onSubmitEditing={handleSubmit}
           secureTextEntry
         />
+        <StyledText>
+          {Constants.manifest.extra!.api_url
+            ? Constants.manifest.extra!.api_url
+            : "url back"}
+        </StyledText>
         <Button
           text="Entrar"
           styleText={{

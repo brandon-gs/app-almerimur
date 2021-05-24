@@ -2,8 +2,8 @@ import React from "react";
 import { theme } from "theme/";
 import { StyleSheet, View } from "react-native";
 import StyledText from "../StyledText";
-import HeaderLogo from "assets/Header.svg";
-import Exit from "assets/Exit.svg";
+import HeaderLogo from "../../../assets/Header.svg";
+import Exit from "../../../assets/Exit.svg";
 import { HeaderProps } from "./Header.types";
 
 function Header({ name, logout }: HeaderProps) {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    paddingHorizontal: 16,
   },
   logo: {
     marginRight: 16,

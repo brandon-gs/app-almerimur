@@ -41,6 +41,13 @@ function CreateWork() {
         })
       );
     } else {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: "",
+          show: false,
+          type: MessageTypes.Danger,
+        })
+      );
       dispatch(actions.hideModal());
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha creado correctamente",

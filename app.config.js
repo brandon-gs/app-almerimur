@@ -2,11 +2,11 @@ import "dotenv/config";
 
 export default {
   expo: {
-    name: "app",
-    slug: "app",
+    name: "Almerimur",
+    slug: "Almerimur",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./src/assets/icon.png",
+    icon: "./assets/icon.png",
     extra: {
       api_url: process.env.EXPO_API_URL,
     },
@@ -27,7 +27,7 @@ export default {
       ],
     },
     splash: {
-      image: "./src/assets/splash.png",
+      image: "./assets/splash.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
@@ -36,16 +36,20 @@ export default {
     },
     assetBundlePatterns: ["**/*"],
     ios: {
+      bundleIdentifier: "app.almerimur",
+      buildNumber: "1.0.0",
       supportsTablet: true,
     },
     android: {
+      package: "app.almerimur",
+      versionCode: 1,
       adaptiveIcon: {
-        foregroundImage: "./src/assets/adaptive-icon.png",
+        foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#FFFFFF",
       },
     },
     web: {
-      favicon: "./src/assets/favicon.png",
+      favicon: "./assets/favicon.png",
     },
   },
 };

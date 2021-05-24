@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/core";
-import { SelectInput } from "components/";
+import { SelectInput, StyledText } from "components/";
 import { formatDate } from "helpers/";
 import { useThunkDispatch } from "hooks/";
 import React, { useEffect } from "react";
@@ -8,6 +8,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import actions from "store/actions";
 import { instanceOfDriverWorks } from "store/reducers/works";
+import { theme } from "theme/";
 
 function HistoryContainer() {
   const thunkDispatch = useThunkDispatch();
@@ -61,12 +62,20 @@ function HistoryContainer() {
 
   return (
     <View style={styles.root}>
-      <FlatList
-        style={{ zIndex: -100 }}
-        data={Object.keys(dates)}
-        renderItem={RenderItem}
-        keyExtractor={(_, index) => index.toString()}
-      />
+      {Object.keys(dates).length > 0 ? (
+        <FlatList
+          style={{ zIndex: -100 }}
+          data={Object.keys(dates)}
+          renderItem={RenderItem}
+          keyExtractor={(_, index) => index.toString()}
+        />
+      ) : (
+        <View style={styles.message}>
+          <StyledText size={3.5} align="center" color={theme.colors.secondary}>
+            No tienes trabajos creados
+          </StyledText>
+        </View>
+      )}
     </View>
   );
 }
@@ -76,6 +85,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 24,
+  },
+  message: {
+    height: "100%",
+    marginTop: 32,
   },
   select: {
     marginVertical: 16,

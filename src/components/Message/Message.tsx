@@ -2,7 +2,7 @@ import React from "react";
 import { MessageProps } from "./Message.types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import StyledText from "../StyledText";
-import Close from "assets/Close.svg";
+import Close from "../../../assets/Close.svg";
 import { MessageTypes } from "store/reducers/message";
 
 function Message({

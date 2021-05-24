@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import TextInputCustom from "../TextInput";
 import { ITextInputProps } from "../TextInput/TextInput.types";
-import Add from "assets/Add.svg";
+import Add from "../../../assets/Add.svg";
 
 interface Props {
   index: number;

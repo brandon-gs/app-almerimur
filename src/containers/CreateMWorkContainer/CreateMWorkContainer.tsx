@@ -77,6 +77,13 @@ function CreateMWork() {
         })
       );
     } else {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: "",
+          show: false,
+          type: MessageTypes.Danger,
+        })
+      );
       dispatch(actions.hideModal());
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha creado correctamente",
@@ -150,6 +157,7 @@ function CreateMWork() {
               if (!rechange.number) {
                 error.number = true;
               }
+              hasError = true;
               return error;
             });
             setRechangesErrors(_rechangesErrors);

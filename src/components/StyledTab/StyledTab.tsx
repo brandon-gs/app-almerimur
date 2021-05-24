@@ -5,9 +5,9 @@ import {
 } from "@react-navigation/bottom-tabs";
 import { Keyboard, TouchableOpacity, View } from "react-native";
 import StyledText from "../StyledText";
-import Home from "assets/Home.svg";
-import Profile from "assets/Profile.svg";
-import History from "assets/History.svg";
+import Home from "../../../assets/Home.svg";
+import Profile from "../../../assets/Profile.svg";
+import History from "../../../assets/History.svg";
 import { theme } from "theme/";
 import Message from "../Message";
 import { useDispatch, useSelector } from "react-redux";

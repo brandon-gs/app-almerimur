@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Background, Button, ListWorks } from "components/";
+import { Background, Button, ListWorks, StyledText } from "components/";
 import { theme } from "theme/";
 import { useNavigation } from "@react-navigation/core";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useThunkDispatch } from "hooks/";
 import actions from "store/actions";
 
@@ -19,11 +19,13 @@ function HomeContainer() {
 
   React.useEffect(() => {
     const getWorks = async () => {
+      thunkDispatch(actions.enableLoader());
       if (user_role === "Conductor") {
         await thunkDispatch(actions.getDriverWorks(token));
       } else {
         await thunkDispatch(actions.getMechanicWorks(token));
       }
+      thunkDispatch(actions.disableLoader());
     };
     getWorks();
   }, []);
@@ -35,7 +37,15 @@ function HomeContainer() {
   return (
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <Background />
-      <ListWorks works={works} />
+      {works.length > 0 ? (
+        <ListWorks works={works} />
+      ) : (
+        <View style={styles.message}>
+          <StyledText size={3.5} align="center" color={theme.colors.secondary}>
+            No tienes trabajos creados
+          </StyledText>
+        </View>
+      )}
       <Button
         text="Crear un nuevo trabajo"
         styleText={{
@@ -52,6 +62,10 @@ function HomeContainer() {
 }
 
 const styles = StyleSheet.create({
+  message: {
+    height: "75%",
+    marginTop: 32,
+  },
   button: {
     marginTop: 16,
     backgroundColor: theme.colors.primary,

@@ -21,7 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MessageTypes } from "store/reducers/message";
 import { changeNameKey } from "../../helpers/objects";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import EditIcon from "assets/Edit.svg";
+import EditIcon from "../../../assets/Edit.svg";
 import actions from "store/actions";
 
 interface Props {
@@ -89,6 +89,13 @@ function EditMWork({ id, title }: Props) {
         })
       );
     } else {
+      thunkDispatch(
+        actions.updateGlobalMessage({
+          message: "",
+          show: false,
+          type: MessageTypes.Danger,
+        })
+      );
       dispatch(actions.hideModal());
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha creado correctamente",
