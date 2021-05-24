@@ -7,7 +7,6 @@ import {
   Platform,
   SafeAreaView as SafeAreaNative,
   StatusBar,
-  View,
 } from "react-native";
 
 function LoginScreen() {
