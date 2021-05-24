@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Button, Message, StyledText, TextInput } from "components/";
+import { Button, Message, TextInput } from "components/";
 import { theme } from "theme/";
 import { useThunkDispatch } from "hooks/";
 import actions from "store/actions/";
 import { useNavigation } from "@react-navigation/core";
 import { MessageTypes } from "store/reducers/message";
-import Constants from "expo-constants";
 
 const defaultValues: LoginForm = {
   email: "",
@@ -69,11 +68,6 @@ function LoginContainer() {
           onSubmitEditing={handleSubmit}
           secureTextEntry
         />
-        <StyledText>
-          {Constants.manifest.extra!.api_url
-            ? Constants.manifest.extra!.api_url
-            : "url back"}
-        </StyledText>
         <Button
           text="Entrar"
           styleText={{
@@ -92,6 +86,7 @@ function LoginContainer() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: theme.colors.light,
   },
   logoContainer: {
     height: "55%",

@@ -132,7 +132,11 @@ function EditMWork({ id, title }: Props) {
             title: false,
             number: false,
           }));
-          setRechanges(formatedRechanges);
+          if (formatedRechanges.length > 0) {
+            setRechanges(formatedRechanges);
+          } else {
+            setRechanges([{ title: "", number: "" }]);
+          }
           setRechangesErrors(errorsRechanges);
         }
       }
@@ -157,6 +161,8 @@ function EditMWork({ id, title }: Props) {
 
   const updateErrors = (_errors: CreateMWorkFormError) =>
     setErrors({ ...errors, ..._errors });
+
+  console.log(rechanges);
 
   const onSubmit = async () => {
     // Enable loader

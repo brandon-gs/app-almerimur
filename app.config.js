@@ -6,7 +6,7 @@ export default {
     slug: "Almerimur",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/logo.png",
     extra: {
       api_url: process.env.EXPO_API_URL,
     },
@@ -44,7 +44,7 @@ export default {
       package: "app.almerimur",
       versionCode: 1,
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./assets/logo.png",
         backgroundColor: "#FFFFFF",
       },
     },
