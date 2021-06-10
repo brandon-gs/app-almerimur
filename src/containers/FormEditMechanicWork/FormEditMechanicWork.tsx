@@ -40,6 +40,7 @@ function EditMWork({ id, title }: Props) {
     loader: { isVisible },
     clients,
     machines,
+    rechanges: rechangesList,
   } = useSelector((state) => state);
 
   const [rechanges, setRechanges] = useState<RechangeWorkFrom[]>([
@@ -68,6 +69,19 @@ function EditMWork({ id, title }: Props) {
     const _rechanges = [...rechanges];
     // Update value
     _rechanges[index][input] = e.nativeEvent.text;
+    setRechanges(_rechanges);
+    // Remove errors
+    const _rechangesErrors = [...rechangesErrors];
+    _rechangesErrors[index][input] = false;
+    setRechangesErrors(_rechangesErrors);
+  };
+
+  const handleRechangeTitle = (input: "title" | "number", index: number) => (
+    value: string
+  ) => {
+    const _rechanges = [...rechanges];
+    // Update value
+    _rechanges[index][input] = value;
     setRechanges(_rechanges);
     // Remove errors
     const _rechangesErrors = [...rechangesErrors];
@@ -117,6 +131,7 @@ function EditMWork({ id, title }: Props) {
       thunkDispatch(actions.enableLoader());
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getMachinesFromApi(token));
+      await thunkDispatch(actions.getRechangesFromApi(token));
       thunkDispatch(actions.disableLoader());
       const { error, work } = await actions.getMechanicWork(token, id);
       if (error && mounted) {
@@ -161,8 +176,6 @@ function EditMWork({ id, title }: Props) {
 
   const updateErrors = (_errors: CreateMWorkFormError) =>
     setErrors({ ...errors, ..._errors });
-
-  console.log(rechanges);
 
   const onSubmit = async () => {
     // Enable loader
@@ -248,7 +261,10 @@ function EditMWork({ id, title }: Props) {
           flex: 1,
         }}
       >
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flex: 1 }}
+        >
           <StyledText color={theme.colors.secondary} align="center" size={3}>
             {title}
           </StyledText>
@@ -308,9 +324,8 @@ function EditMWork({ id, title }: Props) {
                   key={`rechange-${index}`}
                   index={index}
                   textInput={{
-                    label: "Recambios",
                     value: rechange.title,
-                    onChange: handleRechangeChange("title", index),
+                    onChange: handleRechangeTitle("title", index),
                   }}
                   numberInput={{
                     label: "#",

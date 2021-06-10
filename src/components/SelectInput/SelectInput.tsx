@@ -10,11 +10,12 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { theme } from "theme/";
 import StyledText from "../StyledText";
 
-interface SelectInputProps {
+export interface SelectInputProps {
   color?: string;
   error?: string;
   value?: string | null;
   placeholder?: string;
+  width?: number;
   options?: string[];
   editable?: boolean;
   style?: ViewStyle;
@@ -23,38 +24,61 @@ interface SelectInputProps {
   onPressOption?: (option: string) => void | Promise<void>;
   visiblePlaceholder?: boolean;
   onChange: (value: string) => void;
+  onPress?: () => void;
+  showItems?: boolean;
   defaultValue?: string;
+  onFocus?: any;
+  position?: { top: number; left: number };
 }
 
 export default function SelectInput({
   color = theme.colors.secondary,
   error = "",
   value = "",
+  width = 302,
   placeholder = "",
   defaultValue,
   labelError = false,
   editable = true,
   options = [],
   positionOptions = "absolute",
+  showItems = false,
+  onPress,
   onChange,
   onPressOption,
+  onFocus,
   style,
+  position,
 }: SelectInputProps) {
-  const [showOptions, setShowOptions] = useState(false);
+  const [showOptions, setShowOptions] = useState(showItems);
+
+  React.useEffect(() => {
+    setShowOptions(showItems);
+  }, [showItems]);
 
   const hideOptions = () => {
     if (showOptions) {
       setShowOptions(false);
     }
   };
-  const handleShowOptions = () => setShowOptions((show) => !show);
+  const handleShowOptions = () => {
+    setShowOptions((show) => !show);
+    onPress && onPress();
+  };
   const handleSelectOption = (value: string) => {
     onChange(value);
     setShowOptions(false);
+    onPressOption && onPressOption(value);
   };
 
   const currentColor = error ? "#FF0000" : color;
-  const styles = getStyles(currentColor, value, labelError, positionOptions);
+  const styles = getStyles(
+    width,
+    currentColor,
+    value,
+    labelError,
+    positionOptions
+  );
 
   return (
     <>
@@ -71,6 +95,7 @@ export default function SelectInput({
           <TouchableOpacity
             style={styles.textInput}
             onPress={handleShowOptions}
+            onFocus={onFocus}
             disabled={!editable || options.length === 0}
           >
             {Boolean(!value && !labelError) && (
@@ -114,11 +139,7 @@ export default function SelectInput({
                         viewStyle,
                       ];
                     }}
-                    onPress={() =>
-                      onPressOption
-                        ? onPressOption(option)
-                        : handleSelectOption(option)
-                    }
+                    onPress={() => handleSelectOption(option)}
                   >
                     {({ pressed }) => {
                       let textColor = pressed
@@ -145,10 +166,10 @@ export default function SelectInput({
         <Pressable
           style={{
             position: "absolute",
-            top: -200,
-            left: 0,
-            width: Dimensions.get("screen").width,
-            height: Dimensions.get("screen").height,
+            top: position ? position.top : -200,
+            left: position ? position.left : 0,
+            width: "100%",
+            height: "200%",
             zIndex: 1000,
           }}
           onPress={hideOptions}
@@ -168,6 +189,7 @@ const option: ViewStyle = {
 };
 
 const getStyles = (
+  width: number,
   color: string,
   value: string | null,
   error: boolean,
@@ -182,7 +204,7 @@ const getStyles = (
     },
     textInput: {
       position: "relative",
-      width: 302,
+      width: width ? width : 302,
       height: 40,
       borderWidth: 1,
       borderColor: !error ? color : theme.colors.error,

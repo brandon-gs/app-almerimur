@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import actions from "store/actions";
 import { theme } from "theme/";
 import { changeNameKey } from "../../helpers/objects";
+import { MessageTypes } from "store/reducers/message";
 
 const TRAVELS = ["1", "2", "3", "4"];
 
@@ -33,6 +34,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
     projects,
     user: { token },
     loader: { isVisible },
+    vehicles,
   } = useSelector((state) => state);
 
   const [values, setValues] = useState(defaultValues);
@@ -82,6 +84,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
       thunkDispatch(actions.enableLoader());
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getProjectsFromApi(token));
+      await thunkDispatch(actions.getVehiclesFromApi(token));
       const { error, work } = await actions.getDriverWork(token, id);
       if (error && mounted) {
         setApiError(true);
@@ -168,7 +171,10 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
   return !isVisible || (!isLoading && !apiError) ? (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flex: 1 }}
+        >
           <StyledText color={theme.colors.secondary} align="center" size={3}>
             {title}
           </StyledText>
@@ -199,15 +205,14 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               value={values.date}
               onChange={handleOnChangeSelect("date")}
             />
-            <TextInput
-              label="Vehículo"
-              labelAlign="left"
+            <SelectInput
+              options={vehicles}
               editable={editable}
-              color={theme.colors.secondary}
               style={styles.select}
+              placeholder="Vehículo"
               value={values.vehicle}
               labelError={errors.vehicle}
-              onChangeText={handleOnChangeSelect("vehicle")}
+              onChange={handleOnChangeSelect("vehicle")}
             />
             <TextInput
               labelAlign="left"

@@ -30,6 +30,7 @@ function CreateMWork() {
     modal: { isOpen },
     clients,
     machines,
+    rechanges: rechangesList,
   } = useSelector((state) => state);
 
   const [firstTime, setFirstTime] = useState(true);
@@ -63,6 +64,19 @@ function CreateMWork() {
     setRechangesErrors(_rechangesErrors);
   };
 
+  const handleRechangeTitle = (input: "title" | "number", index: number) => (
+    value: string
+  ) => {
+    const _rechanges = [...rechanges];
+    // Update value
+    _rechanges[index][input] = value;
+    setRechanges(_rechanges);
+    // Remove errors
+    const _rechangesErrors = [...rechangesErrors];
+    _rechangesErrors[index][input] = false;
+    setRechangesErrors(_rechangesErrors);
+  };
+
   /** Function that create a work and executes when press accept on modal */
   const createWork = async () => {
     const { error, message } = await thunkDispatch(
@@ -77,6 +91,7 @@ function CreateMWork() {
         })
       );
     } else {
+      await thunkDispatch(actions.getMechanicWorks(token));
       thunkDispatch(
         actions.updateGlobalMessage({
           message: "",
@@ -102,6 +117,7 @@ function CreateMWork() {
       thunkDispatch(actions.enableLoader());
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getMachinesFromApi(token));
+      await thunkDispatch(actions.getRechangesFromApi(token));
       thunkDispatch(actions.disableLoader());
       setFirstTime(false);
     };
@@ -153,11 +169,12 @@ function CreateMWork() {
               };
               if (!rechange.title) {
                 error.title = true;
+                hasError = true;
               }
               if (!rechange.number) {
                 error.number = true;
+                hasError = true;
               }
-              hasError = true;
               return error;
             });
             setRechangesErrors(_rechangesErrors);
@@ -245,9 +262,8 @@ function CreateMWork() {
               index={index}
               showAdd={index + 1 === rechanges.length}
               textInput={{
-                label: "Recambios",
                 value: rechange.title,
-                onChange: handleRechangeChange("title", index),
+                onChange: handleRechangeTitle("title", index),
               }}
               numberInput={{
                 label: "#",

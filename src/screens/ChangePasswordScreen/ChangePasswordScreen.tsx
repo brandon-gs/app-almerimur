@@ -7,6 +7,7 @@ function ChangePasswordScreen() {
   return (
     <KeyboardAwareScrollView
       style={{ flex: 1, backgroundColor: theme.colors.light }}
+      contentContainerStyle={{ flex: 1 }}
     >
       <ChangePasswordContainer />
     </KeyboardAwareScrollView>

@@ -33,7 +33,7 @@ export default function DateInput({
   const [show, setShow] = useState(false);
 
   const handleChange = (_: Event, selectedDate?: Date) => {
-    const currentDate = selectedDate ? selectedDate : date;
+    const currentDate = selectedDate ? new Date(selectedDate) : date;
     setDate(currentDate);
     setShow(Platform.OS === "ios");
     if (currentDate) {
@@ -92,7 +92,6 @@ export default function DateInput({
           mode="date"
           testID="dateTimePicker"
           display={Platform.OS === "ios" ? "spinner" : "default"}
-          minimumDate={new Date()}
           onChange={(event, date) => {
             if (date) {
               handleChange(event, date);

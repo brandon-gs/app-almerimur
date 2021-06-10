@@ -21,6 +21,7 @@ function CreateWork() {
     modal: { isOpen },
     clients,
     projects,
+    vehicles,
   } = useSelector((state) => state);
 
   const [firstTime, setFirstTime] = useState(true);
@@ -41,6 +42,7 @@ function CreateWork() {
         })
       );
     } else {
+      await thunkDispatch(actions.getDriverWorks(token));
       thunkDispatch(
         actions.updateGlobalMessage({
           message: "",
@@ -60,12 +62,13 @@ function CreateWork() {
     dispatch(actions.hideModal());
   };
 
-  /** Get clients, projects, machines  */
+  /** Get clients, projects, vehicles  */
   useEffect(() => {
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getProjectsFromApi(token));
+      await thunkDispatch(actions.getVehiclesFromApi(token));
       thunkDispatch(actions.disableLoader());
     };
     setFirstTime(false);
@@ -158,14 +161,13 @@ function CreateWork() {
           value={values.date}
           onChange={handleOnChangeSelect("date")}
         />
-        <TextInput
-          labelAlign="left"
-          label="Vehículo"
-          color={theme.colors.secondary}
+        <SelectInput
+          options={vehicles}
+          placeholder="Vehículo"
           value={values.vehicle}
           style={styles.select}
           labelError={errors.vehicle}
-          onChangeText={handleOnChangeSelect("vehicle")}
+          onChange={handleOnChangeSelect("vehicle")}
         />
         <TextInput
           labelAlign="left"

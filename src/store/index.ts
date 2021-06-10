@@ -26,6 +26,8 @@ interface RootState {
   works: WorksState;
   modal: ModalState;
   machines: MachinesState;
+  vehicles: VehiclesState;
+  rechanges: RechangesList;
 }
 
 declare module "react-redux" {

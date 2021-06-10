@@ -7,6 +7,8 @@ import projects from "./project";
 import works from "./works";
 import modal from "./modal";
 import machines from "./machine";
+import vehicles from "./vehicle";
+import rechanges from "./rechanges";
 
 const rootReducer = {
   user,
@@ -17,6 +19,8 @@ const rootReducer = {
   machines,
   works,
   modal,
+  vehicles,
+  rechanges,
 };
 
 export default rootReducer;

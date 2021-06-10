@@ -7,7 +7,10 @@ function CreateWorkScreen() {
   return (
     <>
       <Background />
-      <KeyboardAwareScrollView style={{ flex: 1 }}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flex: 1 }}
+      >
         <CreateMWorkContainer />
       </KeyboardAwareScrollView>
     </>

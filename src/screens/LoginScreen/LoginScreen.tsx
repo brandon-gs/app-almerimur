@@ -21,6 +21,7 @@ function LoginScreen() {
       )}
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.light }}>
         <KeyboardAwareScrollView
+          style={{ flex: 1, backgroundColor: theme.colors.light }}
           contentContainerStyle={{
             flex: 1,
             backgroundColor: theme.colors.light,

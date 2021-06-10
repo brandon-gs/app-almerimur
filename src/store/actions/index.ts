@@ -6,6 +6,8 @@ import project from "./project";
 import works from "./works";
 import modal from "./modal";
 import machine from "./machine";
+import vehicle from "./vehicle";
+import rechanges from "./rechanges";
 
 export default {
   ...user,
@@ -16,4 +18,6 @@ export default {
   ...works,
   ...modal,
   ...machine,
+  ...vehicle,
+  ...rechanges,
 };

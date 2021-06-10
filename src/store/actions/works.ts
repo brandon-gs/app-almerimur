@@ -276,14 +276,16 @@ const getDriverWorkDates = (
         );
         let projectsByDate: Record<string, any> = {};
         filterDateWorks.forEach((date: DriverWorkDate) => {
-          projectsByDate[date.driver_work_date] = [];
-          works.forEach((work) => {
-            if (date.driver_work_date === work.driver_work_date) {
-              projectsByDate[date.driver_work_date].push({
-                ...work,
-              });
-            }
-          });
+          if (date.driver_work_date) {
+            projectsByDate[date.driver_work_date] = [];
+            works.forEach((work) => {
+              if (date.driver_work_date === work.driver_work_date) {
+                projectsByDate[date.driver_work_date].push({
+                  ...work,
+                });
+              }
+            });
+          }
         });
         dispatch({
           type: SET_DRIVER_WORK_DATES,
@@ -323,14 +325,16 @@ const getMechanicWorkDates = (
         );
         let projectsByDate: Record<string, any> = {};
         filterDateWorks.forEach((date: MechanicWorkDate) => {
-          projectsByDate[date.mechanic_work_date] = [];
-          works.forEach((work) => {
-            if (date.mechanic_work_date === work.mechanic_work_date) {
-              projectsByDate[date.mechanic_work_date].push({
-                ...work,
-              });
-            }
-          });
+          if (date.mechanic_work_date) {
+            projectsByDate[date.mechanic_work_date] = [];
+            works.forEach((work) => {
+              if (date.mechanic_work_date === work.mechanic_work_date) {
+                projectsByDate[date.mechanic_work_date].push({
+                  ...work,
+                });
+              }
+            });
+          }
         });
         dispatch({
           type: SET_DRIVER_WORK_DATES,

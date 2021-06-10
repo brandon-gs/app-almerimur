@@ -1,19 +1,20 @@
 import React from "react";
 import { SafeAreaView as ReactSafeAreaView, StatusBar } from "react-native";
+import { theme } from "theme/";
 
 export default function SafeAreaView({
   children,
-  margin = true,
+  margin = false,
   style = {},
 }: SafeAreaViewProps) {
-  StatusBar.setBackgroundColor("#FFF");
+  StatusBar.setBackgroundColor(theme.colors.primary);
   return (
     <ReactSafeAreaView
       style={[
         {
           flex: 1,
           marginTop: margin ? StatusBar.currentHeight : 0,
-          backgroundColor: "#FFF",
+          kgroundColor: theme.colors.light,
         },
         style,
       ]}
