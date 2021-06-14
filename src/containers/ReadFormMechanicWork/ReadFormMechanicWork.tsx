@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/core";
 import {
+  Button,
   DateInput,
   RechangeInput,
   SelectInput,
@@ -23,6 +25,7 @@ export default function ReadFormDriverWork({
   values,
 }: ReadFormDriverWorkProps) {
   const thunkDispatch = useThunkDispatch();
+  const navigator = useNavigation();
   const {
     rechanges: rechangesStore,
     user: { token },
@@ -35,6 +38,10 @@ export default function ReadFormDriverWork({
   const [showClientName, setShowClientName] = React.useState(false);
   const [showMachineName, setShowMachineName] = React.useState(false);
   const [rechanges, setRechanges] = useState<any[]>([]);
+
+  const goBackHistory = () => {
+    navigator.navigate("History");
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -98,91 +105,105 @@ export default function ReadFormDriverWork({
   }
 
   return (
-    <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
-      <StyledText color={theme.colors.secondary} align="center" size={3}>
-        {title}
-      </StyledText>
-      <View style={styles.root}>
-        <SelectInput
-          placeholder="Cliente"
-          options={[]}
-          value={work.mechanic_work_client_id}
-          style={styles.select}
-          labelError={false}
-          editable={false}
-          onChange={onChange}
+    <>
+      <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
+        <StyledText color={theme.colors.secondary} align="center" size={3}>
+          {title}
+        </StyledText>
+        <View style={styles.root}>
+          <SelectInput
+            placeholder="Cliente"
+            options={[]}
+            value={work.mechanic_work_client_id}
+            style={styles.select}
+            labelError={false}
+            editable={false}
+            onChange={onChange}
+          />
+          <SelectInput
+            options={[]}
+            placeholder="Maquinas"
+            value={work.mechanic_work_machine_id}
+            style={styles.select}
+            labelError={false}
+            editable={false}
+            onChange={onChange}
+          />
+          <DateInput
+            placeholder="Fecha"
+            style={styles.select}
+            labelError={false}
+            value={
+              work.mechanic_work_date
+                ? new Date(work.mechanic_work_date)
+                : new Date()
+            }
+            editable={false}
+            onChange={onChange}
+          />
+          <TextInput
+            labelAlign="left"
+            label="Horas"
+            color={theme.colors.secondary}
+            value={
+              work.mechanic_work_hours ? work.mechanic_work_hours : undefined
+            }
+            keyboardType="numeric"
+            style={styles.select}
+            labelError={false}
+            editable={false}
+            onChangeText={onChange}
+          />
+          <TextInput
+            labelAlign="left"
+            label="Trabajos"
+            color={theme.colors.secondary}
+            value={
+              work.mechanic_work_works ? work.mechanic_work_works : undefined
+            }
+            style={styles.select}
+            labelError={false}
+            editable={false}
+            onChangeText={onChange}
+          />
+          {rechanges &&
+            rechanges.map((rechange, index) => {
+              return rechange ? (
+                <RechangeInput
+                  showAdd={false}
+                  editable={false}
+                  key={`rechange-${index}`}
+                  index={index}
+                  textInput={{
+                    value: rechange.title,
+                    onChange: onChange,
+                  }}
+                  numberInput={{
+                    label: "#",
+                    value: rechange.mechanic_rechange_number,
+                    onChange: onChange,
+                  }}
+                  errors={[]}
+                  onPressAdd={onChange}
+                  style={styles.select}
+                />
+              ) : null;
+            })}
+        </View>
+      </ScrollView>
+      <View style={styles.modalEditContainer}>
+        <Button
+          text="Volver"
+          onPress={goBackHistory}
+          style={styles.button}
+          styleText={{
+            size: 2.5,
+            color: theme.colors.light,
+            children: "Volver",
+          }}
         />
-        <SelectInput
-          options={[]}
-          placeholder="Maquinas"
-          value={work.mechanic_work_machine_id}
-          style={styles.select}
-          labelError={false}
-          editable={false}
-          onChange={onChange}
-        />
-        <DateInput
-          placeholder="Fecha"
-          style={styles.select}
-          labelError={false}
-          value={
-            work.mechanic_work_date
-              ? new Date(work.mechanic_work_date)
-              : new Date()
-          }
-          editable={false}
-          onChange={onChange}
-        />
-        <TextInput
-          labelAlign="left"
-          label="Horas"
-          color={theme.colors.secondary}
-          value={
-            work.mechanic_work_hours ? work.mechanic_work_hours : undefined
-          }
-          keyboardType="numeric"
-          style={styles.select}
-          labelError={false}
-          editable={false}
-          onChangeText={onChange}
-        />
-        <TextInput
-          labelAlign="left"
-          label="Trabajos"
-          color={theme.colors.secondary}
-          value={
-            work.mechanic_work_works ? work.mechanic_work_works : undefined
-          }
-          style={styles.select}
-          labelError={false}
-          editable={false}
-          onChangeText={onChange}
-        />
-        {rechanges &&
-          rechanges.map((rechange, index) => {
-            return rechange ? (
-              <RechangeInput
-                showAdd={false}
-                editable={false}
-                key={`rechange-${index}`}
-                index={index}
-                textInput={{
-                  value: rechange.title,
-                  onChange: onChange,
-                }}
-                numberInput={{
-                  label: "#",
-                  value: rechange.mechanic_rechange_number,
-                  onChange: onChange,
-                }}
-                errors={[]}
-                onPressAdd={onChange}
-                style={styles.select}
-              />
-            ) : null;
-          })}
       </View>
-    </ScrollView>
+    </>
   );
 }
 
@@ -195,5 +216,25 @@ const styles = StyleSheet.create({
   },
   select: {
     marginBottom: 24,
+  },
+  button: {
+    backgroundColor: theme.colors.primary,
+    width: 172,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+  },
+  modalEditContainer: {
+    height: 90,
+    backgroundColor: theme.colors.light,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
 });

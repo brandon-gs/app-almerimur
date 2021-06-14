@@ -6,6 +6,7 @@ import {
   View,
   SafeAreaView,
   Platform,
+  Pressable,
 } from "react-native";
 import StyledText from "../StyledText";
 import HeaderLogo from "../../../assets/Header.svg";
@@ -28,7 +29,17 @@ function Header({ name, logout }: HeaderProps) {
         {name.substr(0, 16)}
       </StyledText>
       <View style={{ flexGrow: 1 }}></View>
-      <Exit onPress={logout} />
+      <Pressable
+        style={{
+          width: 56,
+          height: 84,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={logout}
+      >
+        <Exit />
+      </Pressable>
     </View>
   );
 }
