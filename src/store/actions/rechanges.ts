@@ -18,8 +18,6 @@ const getRechangesFromApi = (token: string): ReduxThunkAction => {
           id: rechange.rechange_id,
         }))
       );
-      console.log("Rechanges from api");
-      console.log(rechanges);
       dispatch({
         type: UPDATE_RECHANGES,
         payload: rechanges,

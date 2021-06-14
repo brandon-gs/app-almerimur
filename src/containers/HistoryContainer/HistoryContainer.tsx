@@ -14,18 +14,28 @@ function HistoryContainer() {
   const thunkDispatch = useThunkDispatch();
   const navigator = useNavigation();
 
+  const [currentWorks, setCurrentWorks] = useState<
+    DriverWorksState | MechanicWorksState
+  >([]);
+
   const {
     user: { token },
     works: { dates, works },
   } = useSelector((state) => state);
 
   useEffect(() => {
+    setCurrentWorks(works);
+  }, [works]);
+
+  useEffect(() => {
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
       if (instanceOfDriverWorks(works)) {
         await thunkDispatch(actions.getDriverWorkDates(token, works));
+        await thunkDispatch(actions.getDriverWorks(token));
       } else {
         await thunkDispatch(actions.getMechanicWorkDates(token, works));
+        await thunkDispatch(actions.getMechanicWorks(token));
       }
       thunkDispatch(actions.disableLoader());
     };
@@ -47,7 +57,8 @@ function HistoryContainer() {
           const indexFromLabel = option.split(" ").pop();
           if (indexFromLabel) {
             const indexInWorks = parseInt(indexFromLabel) - 1;
-            const work = works[indexInWorks];
+            const work = currentWorks[indexInWorks];
+            console.log(work);
             navigator.navigate("ReadDriverWork", {
               title: option,
               values: work,

@@ -99,8 +99,6 @@ function ProfileContainer() {
     thunkDispatch(actions.disableLoader());
   };
 
-  console.log(userImage);
-
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }}>
       <View style={styles.root}>
