@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Pressable, StyleSheet, View, ViewStyle } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { theme } from "theme/";
 import StyledText from "../StyledText";
@@ -29,6 +23,7 @@ export interface SelectInputProps {
   defaultValue?: string;
   onFocus?: any;
   position?: { top: number; left: number };
+  showTopLabel?: boolean;
 }
 
 export default function SelectInput({
@@ -49,6 +44,7 @@ export default function SelectInput({
   onFocus,
   style,
   position,
+  showTopLabel = false,
 }: SelectInputProps) {
   const [showOptions, setShowOptions] = useState(showItems);
 
@@ -84,7 +80,7 @@ export default function SelectInput({
     <>
       <View style={style}>
         <View style={styles.root}>
-          {Boolean((placeholder && value) || labelError) && (
+          {Boolean((placeholder && value) || labelError || showTopLabel) && (
             <StyledText
               color={labelError ? theme.colors.error : theme.colors.secondary}
               style={styles.visiblePlaceholder}
@@ -98,7 +94,7 @@ export default function SelectInput({
             onFocus={onFocus}
             disabled={!editable || options.length === 0}
           >
-            {Boolean(!value && !labelError) && (
+            {Boolean(!value && !labelError && !showTopLabel) && (
               <StyledText color={theme.colors.secondary}>
                 {placeholder}
               </StyledText>
@@ -249,11 +245,11 @@ const getStyles = (
       position: positionOptions,
       alignContent: "flex-end",
       top:
-        positionOptions === "relative" ? 0 : Boolean(value || error) ? 69 : 40,
+        positionOptions === "relative" ? 0 : Boolean(value || error) ? 66 : 40,
       width: 301,
       zIndex: 1010,
       height: positionOptions === "relative" ? "auto" : 240,
-      maxHeight: positionOptions === "relative" ? 200 : 240,
+      maxHeight: positionOptions === "relative" ? "auto" : 240,
     },
     option: { ...option },
     optionSelected: { ...option, backgroundColor: theme.colors.primary },

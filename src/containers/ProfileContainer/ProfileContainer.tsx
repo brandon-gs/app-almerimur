@@ -70,10 +70,10 @@ function ProfileContainer() {
     let lastError = false;
     // Update image
     if (Boolean(image.uri)) {
-      setImage({ uri: "", height: 0, width: 0 });
       let { message, error } = await thunkDispatch(
         actions.uploadImage(image, token)
       );
+      setImage({ uri: "", height: 0, width: 0 });
       lastMessage = message;
       lastError = error;
       show = true;
@@ -98,6 +98,8 @@ function ProfileContainer() {
     // Disable loader
     thunkDispatch(actions.disableLoader());
   };
+
+  console.log(userImage);
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }}>

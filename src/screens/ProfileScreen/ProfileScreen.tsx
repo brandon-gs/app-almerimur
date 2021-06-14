@@ -4,10 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 function ProfileScreen() {
   return (
-    <KeyboardAwareScrollView
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      contentContainerStyle={{ flex: 1 }}
-    >
+    <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ProfileContainer />
     </KeyboardAwareScrollView>
   );

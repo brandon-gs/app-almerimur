@@ -16,6 +16,7 @@ interface Props {
   errors: RechangeWorkFormError[];
   style: ViewStyle;
   showAdd: boolean;
+  onShowOptions?: any;
 }
 
 export default function RechangeInput({
@@ -27,12 +28,17 @@ export default function RechangeInput({
   errors,
   style,
   showAdd,
+  onShowOptions = null,
 }: Props) {
   const { rechanges } = useSelector((state) => state);
 
   const [showOptions, setShowOptions] = useState(false);
   const [onFocus, setOnFocus] = useState(false);
   const [onFocusNumber, setOnFocusNumber] = useState(false);
+
+  React.useEffect(() => {
+    onShowOptions && onShowOptions(showOptions);
+  }, [showOptions]);
 
   const showTopLabel = Boolean(
     textInput.value || numberInput.value || onFocus || onFocusNumber
@@ -50,7 +56,7 @@ export default function RechangeInput({
           {...textInput}
           editable={editable}
           width={158}
-          options={rechanges}
+          options={rechanges.map((rechange) => rechange.title)}
           placeholder="Recambios"
           value={textInput.value}
           style={styles.inputText}
@@ -59,6 +65,7 @@ export default function RechangeInput({
           onPress={() => changeOptions(true)}
           onPressOption={() => changeOptions(false)}
           onFocus={() => setOnFocus(true)}
+          showTopLabel={showTopLabel}
           position={{ top: -200, left: -80 }}
         />
         <TextInputCustom
@@ -86,8 +93,9 @@ export default function RechangeInput({
             top: -200,
             left: 0,
             width: "100%",
-            height: "200%",
+            minHeight: 1900,
             zIndex: 1000,
+            flex: 1,
           }}
           onPress={() => changeOptions(false)}
         />

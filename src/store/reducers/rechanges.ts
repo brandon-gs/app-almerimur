@@ -1,10 +1,10 @@
 import { UPDATE_RECHANGES } from "store/actions/rechanges";
 import { AnyAction } from "redux";
 
-const initialState: MachinesState = [];
+const initialState: RechangeStore[] = [];
 
 const rechangesReducer = (
-  state: RechangesList = initialState,
+  state: RechangeStore[] = initialState,
   action: AnyAction
 ) => {
   switch (action.type) {

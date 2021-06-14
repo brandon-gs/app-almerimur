@@ -189,7 +189,7 @@ const updateMechanicWork = (
   token: string,
   work: CreateMWorkForm,
   id: number,
-  rechanges: RechangeWorkFrom[]
+  rechanges: RechangeApi[]
 ): ReduxThunkAction => {
   return async (dispatch) => {
     try {
@@ -232,7 +232,7 @@ const updateMechanicWork = (
         rechangesToUpdate.map(async (rechange) => {
           const body = new FormData();
           body.append("id", rechange.id!);
-          body.append("title", rechange.title);
+          body.append("id_rechange", rechange.rechange_id);
           body.append("number", rechange.number);
           await axios.post(`/mechanic/edit_work_rechange.php`, body, {
             headers: {
@@ -357,7 +357,7 @@ const getMechanicWorkDates = (
 const createMechanicWork = (
   token: string,
   work: CreateMWorkForm,
-  rechanges: RechangeWorkFrom[]
+  rechanges: RechangeStore[]
 ): ReduxThunkAction => {
   return async (dispatch) => {
     try {
@@ -399,7 +399,7 @@ const createMechanicWork = (
 
 const createMechanicRechangesWork = (
   token: string,
-  rechanges: RechangeWorkFrom[],
+  rechanges: RechangeStore[],
   workId: number
 ): ReduxThunkAction => {
   return async (_) => {
@@ -411,6 +411,7 @@ const createMechanicRechangesWork = (
             const body = new FormData();
             body.append("number", rechange.number);
             body.append("title", rechange.title);
+            body.append("id_rechange", rechange.id);
             body.append("id_work", workId + "");
             await axios.post(`/mechanic/create_work_rechange.php`, body, {
               headers: {

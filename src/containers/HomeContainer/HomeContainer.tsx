@@ -17,16 +17,17 @@ function HomeContainer() {
     works: { works },
   } = useSelector((state) => state);
 
+  const getWorks = async () => {
+    thunkDispatch(actions.enableLoader());
+    if (user_role === "Conductor") {
+      await thunkDispatch(actions.getDriverWorks(token));
+    } else {
+      await thunkDispatch(actions.getMechanicWorks(token));
+    }
+    thunkDispatch(actions.disableLoader());
+  };
+
   React.useEffect(() => {
-    const getWorks = async () => {
-      thunkDispatch(actions.enableLoader());
-      if (user_role === "Conductor") {
-        await thunkDispatch(actions.getDriverWorks(token));
-      } else {
-        await thunkDispatch(actions.getMechanicWorks(token));
-      }
-      thunkDispatch(actions.disableLoader());
-    };
     getWorks();
   }, []);
 
@@ -38,7 +39,7 @@ function HomeContainer() {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <Background />
       {works.length > 0 ? (
-        <ListWorks works={works} />
+        <ListWorks works={works} getWorks={getWorks} />
       ) : (
         <View style={styles.message}>
           <StyledText size={3.5} align="center" color={theme.colors.secondary}>

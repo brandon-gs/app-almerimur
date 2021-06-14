@@ -19,14 +19,14 @@ const initialState: User = {
   token: "",
 };
 
-const userReducer = (state: User = initialState, action: AnyAction) => {
+const userReducer = (state: User = initialState, action: AnyAction): User => {
   switch (action.type) {
     case SET_USER:
       return { ...state, ...action.payload };
     case UPDATE_USER_PROFILE:
       return { ...state, ...action.payload };
     case UPDATE_USER_IMAGE:
-      return { ...state, image: action.payload };
+      return { ...state, user_image: action.payload };
     case LOGOUT:
       return initialState;
     default:

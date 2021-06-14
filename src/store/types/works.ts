@@ -32,8 +32,8 @@ interface MechanicWork {
 interface MechanicRechangeResponse {
   mechanic_rechange_id: string;
   mechanic_rechange_number: string;
-  mechanic_rechange_title: string;
   mechanic_rechange_work_id: string;
+  rechange_id: string;
 }
 
 type MechanicWorksState = MechanicWork[];

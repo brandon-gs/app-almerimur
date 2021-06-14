@@ -53,7 +53,7 @@ const uploadImage = (image: ImageInfo, token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      dispatch({ type: UPDATE_USER_IMAGE, payload: data.image });
+      dispatch({ type: UPDATE_USER_IMAGE, payload: data.user_image });
       return {
         error: false,
         data,

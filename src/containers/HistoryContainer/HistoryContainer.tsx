@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/core";
 import { SelectInput, StyledText } from "components/";
 import { formatDate } from "helpers/";
 import { useThunkDispatch } from "hooks/";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";

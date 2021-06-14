@@ -7,7 +7,7 @@ export function instanceOfA(object: any): object is DriverWork {
   return "driver_work_id" in object;
 }
 
-function ListWorks({ works }: ListWorksProps) {
+function ListWorks({ works, getWorks }: ListWorksProps) {
   const RenderItem = ({
     item,
   }: {
@@ -41,6 +41,7 @@ function ListWorks({ works }: ListWorksProps) {
         data={[...works].reverse()}
         renderItem={RenderItem}
         keyExtractor={(_, index) => index.toString()}
+        onRefresh={getWorks}
       />
     </View>
   );

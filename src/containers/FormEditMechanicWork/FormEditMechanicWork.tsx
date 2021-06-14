@@ -29,6 +29,14 @@ interface Props {
   title: string;
 }
 
+const emptyRechange = {
+  title: "",
+  number: "",
+  id: "",
+  mechanic_rechange_work_id: "",
+  rechange_id: "",
+};
+
 function EditMWork({ id, title }: Props) {
   const dispatch = useDispatch();
   const thunkDispatch = useThunkDispatch();
@@ -43,9 +51,8 @@ function EditMWork({ id, title }: Props) {
     rechanges: rechangesList,
   } = useSelector((state) => state);
 
-  const [rechanges, setRechanges] = useState<RechangeWorkFrom[]>([
-    { title: "", number: "" },
-  ]);
+  const [rechanges, setRechanges] = useState<RechangeApi[]>([emptyRechange]);
+  const [showRechanges, setShowRechanges] = useState(false);
   const [rechangesErrors, setRechangesErrors] = useState<
     RechangeWorkFormError[]
   >([{ index: 0, title: false, number: false }]);
@@ -56,7 +63,7 @@ function EditMWork({ id, title }: Props) {
   const [editable, setEditable] = useState(false);
 
   const addRechange = () => {
-    setRechanges((rechanges) => [...rechanges, { title: "", number: "" }]);
+    setRechanges((rechanges) => [...rechanges, emptyRechange]);
     setRechangesErrors((error) => [
       ...error,
       { index: rechanges.length, title: false, number: false },
@@ -72,7 +79,9 @@ function EditMWork({ id, title }: Props) {
     setRechanges(_rechanges);
     // Remove errors
     const _rechangesErrors = [...rechangesErrors];
-    _rechangesErrors[index][input] = false;
+    if (_rechangesErrors[index]) {
+      _rechangesErrors[index][input] = false;
+    }
     setRechangesErrors(_rechangesErrors);
   };
 
@@ -82,10 +91,17 @@ function EditMWork({ id, title }: Props) {
     const _rechanges = [...rechanges];
     // Update value
     _rechanges[index][input] = value;
+    // Update id based on title
+    const _rechangesId = rechangesList.filter((rechange) => {
+      return value === rechange.title;
+    });
+    _rechanges[index].rechange_id = _rechangesId[0].id;
     setRechanges(_rechanges);
     // Remove errors
     const _rechangesErrors = [...rechangesErrors];
-    _rechangesErrors[index][input] = false;
+    if (_rechangesErrors[index]) {
+      _rechangesErrors[index][input] = false;
+    }
     setRechangesErrors(_rechangesErrors);
   };
 
@@ -124,43 +140,57 @@ function EditMWork({ id, title }: Props) {
 
   const updateValues = (values: CreateMWorkForm) => setValues(values);
 
+  useEffect(() => {
+    const updateRechanges = async () => {
+      thunkDispatch(actions.enableLoader());
+      const { rechanges } = await actions.getMechanicRechanges(token, id);
+      const formatedRechanges = await formatToRechangeValues(rechanges);
+      const mergedRechanges = formatedRechanges.map((formatRechange) => {
+        rechangesList.forEach((bdRechanges) => {
+          if (bdRechanges.id === formatRechange.rechange_id) {
+            formatRechange.title = bdRechanges.title;
+          }
+        });
+        return formatRechange;
+      });
+      const errorsRechanges = mergedRechanges.map((_, index) => ({
+        index,
+        title: false,
+        number: false,
+      }));
+      if (mergedRechanges.length > 0) {
+        setRechanges(mergedRechanges);
+      } else {
+        setRechanges([emptyRechange]);
+      }
+      setRechangesErrors(errorsRechanges);
+      thunkDispatch(actions.disableLoader());
+    };
+    updateRechanges();
+  }, [rechangesList]);
+
   /** Get clients, projects, machines  */
   useEffect(() => {
     let mounted = true;
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
+      await thunkDispatch(actions.getRechangesFromApi(token));
       await thunkDispatch(actions.getClientsFromApi(token));
       await thunkDispatch(actions.getMachinesFromApi(token));
-      await thunkDispatch(actions.getRechangesFromApi(token));
-      thunkDispatch(actions.disableLoader());
       const { error, work } = await actions.getMechanicWork(token, id);
       if (error && mounted) {
         setApiError(true);
       } else if (mounted) {
         const _values = formatToMechanicValues(work);
         updateValues(_values);
-        const { rechanges } = await actions.getMechanicRechanges(token, id);
-        if (mounted && rechanges) {
-          const formatedRechanges = await formatToRechangeValues(rechanges);
-          const errorsRechanges = formatedRechanges.map((_, index) => ({
-            index,
-            title: false,
-            number: false,
-          }));
-          if (formatedRechanges.length > 0) {
-            setRechanges(formatedRechanges);
-          } else {
-            setRechanges([{ title: "", number: "" }]);
-          }
-          setRechangesErrors(errorsRechanges);
-        }
       }
+      setIsLoading(false);
+      thunkDispatch(actions.disableLoader());
     };
     getData();
     dispatch(actions.setModalDecline(closeModal));
     if (mounted) {
       updateErrors(defaultErrors);
-      setIsLoading(false);
     }
     return () => {
       mounted = false;
@@ -187,28 +217,7 @@ function EditMWork({ id, title }: Props) {
       Object.keys(values).map((key) => {
         // Add custom errors
         const currentValue = values[key as keyof CreateMWorkForm];
-        // Check if rechanges has errors
-        if (key === "rechanges") {
-          if (rechanges.length === 0) {
-            setRechangesErrors([]);
-          } else {
-            const _rechangesErrors = rechanges.map((rechange, index) => {
-              const error: RechangeWorkFormError = {
-                index,
-                title: false,
-                number: false,
-              };
-              if (!rechange.title) {
-                error.title = true;
-              }
-              if (!rechange.number) {
-                error.number = true;
-              }
-              return error;
-            });
-            setRechangesErrors(_rechangesErrors);
-          }
-        }
+
         // Check if value is empty
         if (!currentValue) {
           _errors[key as keyof CreateMWorkFormError] = true;
@@ -217,6 +226,26 @@ function EditMWork({ id, title }: Props) {
         }
       })
     );
+    // Check if rechanges has errors
+    if (rechanges.length === 0) {
+      setRechangesErrors([]);
+    } else {
+      const _rechangesErrors = rechanges.map((rechange, index) => {
+        const error: RechangeWorkFormError = {
+          index,
+          title: false,
+          number: false,
+        };
+        if (!rechange.title) {
+          error.title = true;
+        }
+        if (!rechange.number) {
+          error.number = true;
+        }
+        return error;
+      });
+      setRechangesErrors(_rechangesErrors);
+    }
     updateErrors(_errors);
     // Show modal if has errors
     if (hasError) {
@@ -261,10 +290,7 @@ function EditMWork({ id, title }: Props) {
           flex: 1,
         }}
       >
-        <KeyboardAwareScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flex: 1 }}
-        >
+        <KeyboardAwareScrollView style={{ flex: 1 }}>
           <StyledText color={theme.colors.secondary} align="center" size={3}>
             {title}
           </StyledText>
@@ -334,6 +360,7 @@ function EditMWork({ id, title }: Props) {
                   }}
                   errors={rechangesErrors}
                   onPressAdd={addRechange}
+                  onShowOptions={setShowRechanges}
                   style={styles.select}
                 />
               );
@@ -351,6 +378,7 @@ function EditMWork({ id, title }: Props) {
               ></Button>
             )}
           </View>
+          {showRechanges && <View style={styles.rechangesSpace}></View>}
         </KeyboardAwareScrollView>
         {isOpen && <View style={styles.modalSpacing}></View>}
       </ScrollView>
@@ -381,6 +409,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 24,
     marginBottom: 48,
+  },
+  rechangesSpace: {
+    width: "100%",
+    height: 160,
   },
   select: {
     marginBottom: 24,
@@ -452,7 +484,6 @@ const formatToRechangeValues = async (rechanges: any[]) => {
         "mechanic_rechange_number",
         "number"
       );
-      _rechange = changeNameKey(_rechange, "mechanic_rechange_title", "title");
       _rechange = changeNameKey(_rechange, "mechanic_rechange_id", "id");
       return _rechange;
     })

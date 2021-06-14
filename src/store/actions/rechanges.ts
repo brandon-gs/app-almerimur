@@ -12,9 +12,14 @@ const getRechangesFromApi = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      const rechanges = data.rechanges.map(
-        (rechange: Rechange) => rechange.rechange_title
+      const rechanges = await Promise.all(
+        data.rechanges.map((rechange: Rechange) => ({
+          title: rechange.rechange_title,
+          id: rechange.rechange_id,
+        }))
       );
+      console.log("Rechanges from api");
+      console.log(rechanges);
       dispatch({
         type: UPDATE_RECHANGES,
         payload: rechanges,

@@ -5,9 +5,12 @@ import {
   StyledText,
   TextInput,
 } from "components/";
-import React from "react";
+import { useThunkDispatch } from "hooks/";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
+import actions from "store/actions";
 import { theme } from "theme/";
 
 interface ReadFormDriverWorkProps {
@@ -19,7 +22,40 @@ export default function ReadFormDriverWork({
   title,
   values,
 }: ReadFormDriverWorkProps) {
+  const thunkDispatch = useThunkDispatch();
+  const {
+    rechanges: rechangesStore,
+    user: { token },
+  } = useSelector((state) => state);
+  const [rechanges, setRechanges] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getRechanges = async () => {
+      await thunkDispatch(actions.getRechangesFromApi(token));
+    };
+    getRechanges();
+  }, []);
+
+  useEffect(() => {
+    const updateRechanges = () => {
+      if (values.rechanges) {
+        const formatedRechanges = values.rechanges.map((rechange) => {
+          const newRechange: any = rechange;
+          rechangesStore.forEach((rechangeApi) => {
+            if (rechange.rechange_id === rechangeApi.id) {
+              newRechange.title = rechangeApi.title;
+            }
+          });
+          return newRechange;
+        });
+        setRechanges(formatedRechanges);
+      }
+    };
+    updateRechanges();
+  }, [rechangesStore]);
+
   const onChange = () => {};
+
   return (
     <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
       <StyledText color={theme.colors.secondary} align="center" size={3}>
@@ -81,8 +117,8 @@ export default function ReadFormDriverWork({
           editable={false}
           onChangeText={onChange}
         />
-        {values.rechanges &&
-          values.rechanges.map((rechange, index) => {
+        {rechanges &&
+          rechanges.map((rechange, index) => {
             return rechange ? (
               <RechangeInput
                 showAdd={false}
@@ -90,8 +126,7 @@ export default function ReadFormDriverWork({
                 key={`rechange-${index}`}
                 index={index}
                 textInput={{
-                  label: "Recambios",
-                  value: rechange.mechanic_rechange_title,
+                  value: rechange.title,
                   onChange: onChange,
                 }}
                 numberInput={{
