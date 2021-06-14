@@ -30,8 +30,8 @@ export const getMonthName = (month: number) => {
 };
 
 export const formatDate = (date: Date) => {
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
+  const day = date.getUTCDate();
+  const month = date.getUTCMonth();
+  const year = date.getUTCFullYear();
   return `${day} ${getMonthName(month)} ${year}`;
 };

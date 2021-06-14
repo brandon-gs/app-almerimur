@@ -24,20 +24,27 @@ function HistoryContainer() {
   } = useSelector((state) => state);
 
   useEffect(() => {
-    setCurrentWorks(works);
+    const updateWorks = async () => {
+      thunkDispatch(actions.enableLoader());
+      setCurrentWorks(works);
+      if (instanceOfDriverWorks(works)) {
+        await thunkDispatch(actions.getDriverWorkDates(token, works));
+      } else {
+        await thunkDispatch(actions.getMechanicWorkDates(token, works));
+      }
+      thunkDispatch(actions.disableLoader());
+    };
+    updateWorks();
   }, [works]);
 
   useEffect(() => {
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
       if (instanceOfDriverWorks(works)) {
-        await thunkDispatch(actions.getDriverWorkDates(token, works));
         await thunkDispatch(actions.getDriverWorks(token));
       } else {
-        await thunkDispatch(actions.getMechanicWorkDates(token, works));
         await thunkDispatch(actions.getMechanicWorks(token));
       }
-      thunkDispatch(actions.disableLoader());
     };
 
     getData();
@@ -58,7 +65,6 @@ function HistoryContainer() {
           if (indexFromLabel) {
             const indexInWorks = parseInt(indexFromLabel) - 1;
             const work = currentWorks[indexInWorks];
-            console.log(work);
             navigator.navigate("ReadDriverWork", {
               title: option,
               values: work,

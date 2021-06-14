@@ -29,13 +29,15 @@ export default function DateInput({
   onChange,
   style,
 }: DateInputProps) {
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
   const [show, setShow] = useState(false);
 
   const handleChange = (_: Event, selectedDate?: Date) => {
-    const currentDate = selectedDate ? new Date(selectedDate) : date;
-    setDate(currentDate);
+    const currentDate = selectedDate ? selectedDate : date;
+    // currentDate.setHours(0, 0, 0, 0);
+    currentDate.setUTCHours(0, 0, 0, 0);
     setShow(Platform.OS === "ios");
+    setDate(currentDate);
     if (currentDate) {
       onChange(currentDate);
     }
@@ -50,6 +52,14 @@ export default function DateInput({
 
   const closePicker = () => {
     setShow(Platform.OS === "ios");
+  };
+
+  const convertToUTCDate = (date: Date) => {
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    );
   };
 
   return (
@@ -88,7 +98,13 @@ export default function DateInput({
 
       {show && (
         <DateTimePicker
-          value={value ? value : date ? date : new Date(Date.now())}
+          value={
+            value
+              ? convertToUTCDate(value)
+              : date
+              ? convertToUTCDate(date)
+              : convertToUTCDate(new Date())
+          }
           mode="date"
           testID="dateTimePicker"
           display={Platform.OS === "ios" ? "spinner" : "default"}
