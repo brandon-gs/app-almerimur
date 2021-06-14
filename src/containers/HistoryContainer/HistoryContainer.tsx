@@ -25,7 +25,6 @@ function HistoryContainer() {
 
   useEffect(() => {
     const updateWorks = async () => {
-      thunkDispatch(actions.enableLoader());
       setCurrentWorks(works);
       if (instanceOfDriverWorks(works)) {
         await thunkDispatch(actions.getDriverWorkDates(token, works));

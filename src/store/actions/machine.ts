@@ -12,9 +12,7 @@ const getMachinesFromApi = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      const machines = data.machines.map(
-        (machine: Machine) => machine.machine_name
-      );
+      const machines = data.machines ? data.machines : [];
       dispatch({
         type: UPDATE_MACHINES,
         payload: machines,

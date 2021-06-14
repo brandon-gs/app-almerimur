@@ -3,4 +3,4 @@ interface Client {
   client_name: string;
 }
 
-type ClientsState = string[];
+type ClientsState = Client[];

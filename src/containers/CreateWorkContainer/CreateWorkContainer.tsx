@@ -28,10 +28,34 @@ function CreateWork() {
   const [values, setValues] = useState<CreateWorkForm>(defaultValues);
   const [errors, setErrors] = useState<CreateWorkFormError>(defaultErrors);
 
+  const formatValues = () => {
+    const formValues = Object.assign({}, values);
+    // Replace the client name with the client id
+    clients.forEach((client) => {
+      if (client.client_name === formValues.client) {
+        formValues.client = client.client_id;
+      }
+    });
+    // Replace the project name with the project id
+    projects.forEach((project) => {
+      if (project.project_name === formValues.project) {
+        formValues.project = project.project_id;
+      }
+    });
+    // Replace the vehicle name with the vehicle id
+    vehicles.forEach((vehicle) => {
+      if (vehicle.name === formValues.vehicle) {
+        formValues.vehicle = vehicle.id;
+      }
+    });
+    return formValues;
+  };
+
   /** Function that create a work and executes when press accept on modal */
   const createWork = async () => {
+    const formValues = formatValues();
     const { error, message } = await thunkDispatch(
-      actions.createDriverWork(token, values)
+      actions.createDriverWork(token, formValues)
     );
     if (error) {
       thunkDispatch(
@@ -95,6 +119,11 @@ function CreateWork() {
   const updateErrors = (_errors: CreateWorkFormError) =>
     setErrors({ ...errors, ..._errors });
 
+  // Set modal accept function
+  useEffect(() => {
+    dispatch(actions.setModalAccept(createWork));
+  }, [values]);
+
   const onSubmit = async () => {
     // Enable loader
     await thunkDispatch(actions.enableLoader());
@@ -140,14 +169,14 @@ function CreateWork() {
       <View style={styles.root}>
         <SelectInput
           placeholder="Cliente"
-          options={clients}
+          options={clients.map((client) => client.client_name)}
           value={values.client}
           labelError={errors.client}
           style={styles.select}
           onChange={handleOnChangeSelect("client")}
         />
         <SelectInput
-          options={projects}
+          options={projects.map((project) => project.project_name)}
           placeholder="Proyecto"
           value={values.project}
           style={styles.select}
@@ -162,7 +191,7 @@ function CreateWork() {
           onChange={handleOnChangeSelect("date")}
         />
         <SelectInput
-          options={vehicles}
+          options={vehicles.map((vehicle) => vehicle.name)}
           placeholder="Vehículo"
           value={values.vehicle}
           style={styles.select}

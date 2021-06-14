@@ -26,14 +26,25 @@ export default function ReadFormDriverWork({
   const {
     rechanges: rechangesStore,
     user: { token },
+    loader: { isVisible },
+    clients,
+    machines,
   } = useSelector((state) => state);
+
+  const [work, setWork] = useState(values);
+  const [showClientName, setShowClientName] = React.useState(false);
+  const [showMachineName, setShowMachineName] = React.useState(false);
   const [rechanges, setRechanges] = useState<any[]>([]);
 
   useEffect(() => {
-    const getRechanges = async () => {
+    const getData = async () => {
+      thunkDispatch(actions.enableLoader());
+      await thunkDispatch(actions.getClientsFromApi(token));
+      await thunkDispatch(actions.getMachinesFromApi(token));
       await thunkDispatch(actions.getRechangesFromApi(token));
+      thunkDispatch(actions.disableLoader());
     };
-    getRechanges();
+    getData();
   }, []);
 
   useEffect(() => {
@@ -54,7 +65,37 @@ export default function ReadFormDriverWork({
     updateRechanges();
   }, [rechangesStore]);
 
+  // Update client name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, work);
+    clients.forEach((client) => {
+      if (client.client_id === work.mechanic_work_client_id) {
+        copyWork.mechanic_work_client_id = client.client_name;
+      }
+    });
+    setWork(copyWork);
+    setShowClientName(true);
+  }, [clients]);
+
+  // Update machine name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, work);
+    machines.forEach((machine) => {
+      if (machine.machine_id === work.mechanic_work_machine_id) {
+        copyWork.mechanic_work_machine_id = machine.machine_name;
+      }
+    });
+    setWork(copyWork);
+    setShowMachineName(true);
+  }, [machines]);
+
   const onChange = () => {};
+
+  const canRender = showClientName && showMachineName && !isVisible;
+
+  if (!canRender) {
+    return null;
+  }
 
   return (
     <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
@@ -65,7 +106,7 @@ export default function ReadFormDriverWork({
         <SelectInput
           placeholder="Cliente"
           options={[]}
-          value={values.mechanic_work_client_name}
+          value={work.mechanic_work_client_id}
           style={styles.select}
           labelError={false}
           editable={false}
@@ -74,7 +115,7 @@ export default function ReadFormDriverWork({
         <SelectInput
           options={[]}
           placeholder="Maquinas"
-          value={values.mechanic_work_machine_name}
+          value={work.mechanic_work_machine_id}
           style={styles.select}
           labelError={false}
           editable={false}
@@ -85,8 +126,8 @@ export default function ReadFormDriverWork({
           style={styles.select}
           labelError={false}
           value={
-            values.mechanic_work_date
-              ? new Date(values.mechanic_work_date)
+            work.mechanic_work_date
+              ? new Date(work.mechanic_work_date)
               : new Date()
           }
           editable={false}
@@ -97,7 +138,7 @@ export default function ReadFormDriverWork({
           label="Horas"
           color={theme.colors.secondary}
           value={
-            values.mechanic_work_hours ? values.mechanic_work_hours : undefined
+            work.mechanic_work_hours ? work.mechanic_work_hours : undefined
           }
           keyboardType="numeric"
           style={styles.select}
@@ -110,7 +151,7 @@ export default function ReadFormDriverWork({
           label="Trabajos"
           color={theme.colors.secondary}
           value={
-            values.mechanic_work_works ? values.mechanic_work_works : undefined
+            work.mechanic_work_works ? work.mechanic_work_works : undefined
           }
           style={styles.select}
           labelError={false}

@@ -12,7 +12,7 @@ const getClientsFromApi = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      const clients = data.clients.map((client: Client) => client.client_name);
+      const clients = data.clients ? data.clients : [];
       dispatch({
         type: UPDATE_CLIENTS,
         payload: clients,

@@ -42,11 +42,38 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
   const [apiError, setApiError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [editable, setEditable] = useState(false);
+  const [showClientName, setShowClientName] = useState(false);
+  const [showProjectName, setShowProjectName] = useState(false);
+  const [showVehicleName, setShowVehicleName] = useState(false);
+
+  const replaceIdWithNames = () => {
+    const formValues = Object.assign({}, values);
+    // Replace the client name with the client id
+    clients.forEach((client) => {
+      if (client.client_name === formValues.client) {
+        formValues.client = client.client_id;
+      }
+    });
+    // Replace the project name with the project id
+    projects.forEach((project) => {
+      if (project.project_name === formValues.project) {
+        formValues.project = project.project_id;
+      }
+    });
+    // Replace the vehicle name with the vehicle id
+    vehicles.forEach((vehicle) => {
+      if (vehicle.name === formValues.vehicle) {
+        formValues.vehicle = vehicle.id;
+      }
+    });
+    return formValues;
+  };
 
   const updateWorkOnModal = async () => {
+    const formValues = replaceIdWithNames();
     const { error, message } = await actions.updateDriverWork(
       token,
-      values,
+      formValues,
       id
     );
     if (error && message) {
@@ -76,34 +103,6 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
   const closeModal = () => {
     dispatch(actions.hideModal());
   };
-
-  /** Get clients, projects, machines  */
-  React.useEffect(() => {
-    let mounted = true;
-    const getData = async () => {
-      thunkDispatch(actions.enableLoader());
-      await thunkDispatch(actions.getClientsFromApi(token));
-      await thunkDispatch(actions.getProjectsFromApi(token));
-      await thunkDispatch(actions.getVehiclesFromApi(token));
-      const { error, work } = await actions.getDriverWork(token, id);
-      if (error && mounted) {
-        setApiError(true);
-      } else if (mounted) {
-        const _values = formatToDriverValues(work);
-        setValues(_values);
-      }
-      thunkDispatch(actions.disableLoader());
-    };
-    getData();
-    dispatch(actions.setModalDecline(closeModal));
-    if (mounted) {
-      updateErrors(defaultErrors);
-      setIsLoading(false);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const updateErrors = (_errors: CreateWorkFormError) =>
     setErrors({ ...errors, ..._errors });
@@ -138,7 +137,8 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
     if (hasError) {
       dispatch(actions.showModal());
     } else {
-      await actions.updateDriverWork(token, values, id);
+      const formValues = replaceIdWithNames();
+      await actions.updateDriverWork(token, formValues, id);
       navigation.navigate("FinishStep", {
         message: "Tu trabajo se ha editado correctamente",
       });
@@ -168,7 +168,80 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
     }
   };
 
-  return !isVisible || (!isLoading && !apiError) ? (
+  /** Get clients, projects, machines  */
+  React.useEffect(() => {
+    let mounted = true;
+    const getData = async () => {
+      thunkDispatch(actions.enableLoader());
+      const { error, work } = await actions.getDriverWork(token, id);
+      if (error && mounted) {
+        setApiError(true);
+      } else if (mounted) {
+        const _values = formatToDriverValues(work);
+        setValues(_values);
+      }
+      await thunkDispatch(actions.getClientsFromApi(token));
+      await thunkDispatch(actions.getProjectsFromApi(token));
+      await thunkDispatch(actions.getVehiclesFromApi(token));
+      thunkDispatch(actions.disableLoader());
+    };
+    getData();
+    dispatch(actions.setModalDecline(closeModal));
+    if (mounted) {
+      updateErrors(defaultErrors);
+      setIsLoading(false);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Update modal function when a value change
+  React.useEffect(() => {
+    dispatch(actions.setModalAccept(updateWorkOnModal));
+  }, [values]);
+
+  // Update client name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, values);
+    clients.forEach((client) => {
+      if (client.client_id === values.client) {
+        copyWork.client = client.client_name;
+      }
+    });
+    setValues(copyWork);
+    setShowClientName(true);
+  }, [clients]);
+
+  // Update project name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, values);
+    projects.forEach((project) => {
+      if (project.project_id === values.project) {
+        copyWork.project = project.project_name;
+      }
+    });
+    setValues(copyWork);
+    setShowProjectName(true);
+  }, [projects]);
+
+  // Update vehicle name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, values);
+    vehicles.forEach((vehicle) => {
+      if (vehicle.id === values.vehicle) {
+        copyWork.vehicle = vehicle.name;
+      }
+    });
+    setValues(copyWork);
+    setShowVehicleName(true);
+  }, [vehicles]);
+
+  const loadedAllValues = showVehicleName && showClientName && showProjectName;
+
+  const canRender = !isVisible && loadedAllValues && !apiError && !isLoading;
+
+  return canRender ? (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, paddingVertical: 24 }}>
         <KeyboardAwareScrollView
@@ -181,19 +254,19 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
           <View style={styles.root}>
             <SelectInput
               placeholder="Cliente"
-              options={clients}
-              value={values.client}
+              options={clients.map((client) => client.client_name)}
+              value={showClientName ? values.client : ""}
               style={styles.select}
               labelError={errors.client}
               onChange={handleOnChangeSelect("client")}
               editable={editable}
             />
             <SelectInput
-              options={projects}
+              options={projects.map((project) => project.project_name)}
               editable={editable}
               style={styles.select}
               placeholder="Proyecto"
-              value={values.project}
+              value={showProjectName ? values.project : ""}
               labelError={errors.project}
               onChange={handleOnChangeSelect("project")}
             />
@@ -206,11 +279,11 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               onChange={handleOnChangeSelect("date")}
             />
             <SelectInput
-              options={vehicles}
+              options={vehicles.map((vehicle) => vehicle.name)}
               editable={editable}
               style={styles.select}
               placeholder="Vehículo"
-              value={values.vehicle}
+              value={showVehicleName ? values.vehicle : ""}
               labelError={errors.vehicle}
               onChange={handleOnChangeSelect("vehicle")}
             />
@@ -329,10 +402,10 @@ const styles = StyleSheet.create({
 
 const formatToDriverValues = (work: DriverWork) => {
   let _work = work as any;
-  _work = changeNameKey(_work, "driver_work_client_name", "client");
-  _work = changeNameKey(_work, "driver_work_project_name", "project");
+  _work = changeNameKey(_work, "driver_work_client_id", "client");
+  _work = changeNameKey(_work, "driver_work_project_id", "project");
   _work = changeNameKey(_work, "driver_work_date", "date");
-  _work = changeNameKey(_work, "driver_work_vehicle_name", "vehicle");
+  _work = changeNameKey(_work, "driver_work_vehicle_id", "vehicle");
   _work = changeNameKey(_work, "driver_work_concept", "concept");
   _work = changeNameKey(_work, "driver_work_hours", "hours");
   _work = changeNameKey(_work, "driver_work_travels", "travels");

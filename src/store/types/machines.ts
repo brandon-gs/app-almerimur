@@ -3,4 +3,4 @@ interface Machine {
   machine_name: string;
 }
 
-type MachinesState = string[];
+type MachinesState = Machine[];

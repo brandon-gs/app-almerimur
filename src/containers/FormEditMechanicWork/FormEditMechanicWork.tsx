@@ -61,6 +61,8 @@ function EditMWork({ id, title }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
   const [editable, setEditable] = useState(false);
+  const [showClientName, setShowClientName] = React.useState(false);
+  const [showMachineName, setShowMachineName] = React.useState(false);
 
   const addRechange = () => {
     setRechanges((rechanges) => [...rechanges, emptyRechange]);
@@ -105,10 +107,27 @@ function EditMWork({ id, title }: Props) {
     setRechangesErrors(_rechangesErrors);
   };
 
+  const formatValues = () => {
+    const formValues = Object.assign({}, values);
+    // Replace the client name with the client id
+    clients.forEach((client) => {
+      if (client.client_name === formValues.client) {
+        formValues.client = client.client_id;
+      }
+    });
+    // Replace the project name with the project id
+    machines.forEach((machine) => {
+      if (machine.machine_name === formValues.machine) {
+        formValues.machine = machine.machine_id;
+      }
+    });
+    return formValues;
+  };
   /** Function that update a work and executes when press accept on modal */
   const updateMechanicWork = async () => {
+    const formValues = formatValues();
     const { error, message } = await thunkDispatch(
-      actions.updateMechanicWork(token, values, id, rechanges)
+      actions.updateMechanicWork(token, formValues, id, rechanges)
     );
     if (error) {
       thunkDispatch(
@@ -142,7 +161,6 @@ function EditMWork({ id, title }: Props) {
 
   useEffect(() => {
     const updateRechanges = async () => {
-      thunkDispatch(actions.enableLoader());
       const { rechanges } = await actions.getMechanicRechanges(token, id);
       const formatedRechanges = await formatToRechangeValues(rechanges);
       const mergedRechanges = formatedRechanges.map((formatRechange) => {
@@ -164,7 +182,6 @@ function EditMWork({ id, title }: Props) {
         setRechanges([emptyRechange]);
       }
       setRechangesErrors(errorsRechanges);
-      thunkDispatch(actions.disableLoader());
     };
     updateRechanges();
   }, [rechangesList]);
@@ -174,9 +191,6 @@ function EditMWork({ id, title }: Props) {
     let mounted = true;
     const getData = async () => {
       thunkDispatch(actions.enableLoader());
-      await thunkDispatch(actions.getRechangesFromApi(token));
-      await thunkDispatch(actions.getClientsFromApi(token));
-      await thunkDispatch(actions.getMachinesFromApi(token));
       const { error, work } = await actions.getMechanicWork(token, id);
       if (error && mounted) {
         setApiError(true);
@@ -184,6 +198,9 @@ function EditMWork({ id, title }: Props) {
         const _values = formatToMechanicValues(work);
         updateValues(_values);
       }
+      await thunkDispatch(actions.getRechangesFromApi(token));
+      await thunkDispatch(actions.getClientsFromApi(token));
+      await thunkDispatch(actions.getMachinesFromApi(token));
       setIsLoading(false);
       thunkDispatch(actions.disableLoader());
     };
@@ -260,7 +277,7 @@ function EditMWork({ id, title }: Props) {
     // Set modal accept function
     dispatch(actions.setModalAccept(updateMechanicWork));
     // Disable loader
-    await thunkDispatch(actions.disableLoader());
+    thunkDispatch(actions.disableLoader());
   };
 
   const enableEditMode = () => setEditable(true);
@@ -282,7 +299,38 @@ function EditMWork({ id, title }: Props) {
     }
   };
 
-  return !isVisible || (!isLoading && !apiError) ? (
+  React.useEffect(() => {
+    dispatch(actions.setModalAccept(updateMechanicWork));
+  }, [values]);
+
+  // Update client name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, values);
+    clients.forEach((client) => {
+      if (client.client_id === values.client) {
+        copyWork.client = client.client_name;
+      }
+    });
+    setValues(copyWork);
+    setShowClientName(true);
+  }, [clients]);
+
+  // Update machine name when do the api call
+  React.useEffect(() => {
+    const copyWork = Object.assign({}, values);
+    machines.forEach((machine) => {
+      if (machine.machine_id === values.machine) {
+        copyWork.machine = machine.machine_name;
+      }
+    });
+    setValues(copyWork);
+    setShowMachineName(true);
+  }, [machines]);
+
+  const loadedAllValues = showClientName && showMachineName;
+  const canRender = !isVisible && !apiError && !isLoading && loadedAllValues;
+
+  return canRender ? (
     <View style={{ flex: 1 }}>
       <ScrollView
         style={{ flex: 1, paddingVertical: 24 }}
@@ -297,7 +345,7 @@ function EditMWork({ id, title }: Props) {
           <View style={styles.root}>
             <SelectInput
               placeholder="Cliente"
-              options={clients}
+              options={clients.map((client) => client.client_name)}
               value={values.client}
               labelError={errors.client}
               style={styles.select}
@@ -305,7 +353,7 @@ function EditMWork({ id, title }: Props) {
               onChange={handleOnChangeSelect("client")}
             />
             <SelectInput
-              options={machines}
+              options={machines.map((machine) => machine.machine_name)}
               placeholder="Maquinas"
               value={values.machine}
               style={styles.select}
@@ -463,10 +511,10 @@ const defaultErrors: CreateMWorkFormError = {
 
 const formatToMechanicValues = (work: DriverWork) => {
   let _work = work as any;
-  _work = changeNameKey(_work, "mechanic_work_client_name", "client");
+  _work = changeNameKey(_work, "mechanic_work_client_id", "client");
   _work = changeNameKey(_work, "mechanic_work_date", "date");
   _work = changeNameKey(_work, "mechanic_work_hours", "hours");
-  _work = changeNameKey(_work, "mechanic_work_machine_name", "machine");
+  _work = changeNameKey(_work, "mechanic_work_machine_id", "machine");
   _work = changeNameKey(_work, "mechanic_work_works", "works");
   const currentWork = _work;
   if (currentWork.date) {

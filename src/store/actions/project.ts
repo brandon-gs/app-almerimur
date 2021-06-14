@@ -12,9 +12,7 @@ const getProjectsFromApi = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      const projects = data.projects.map(
-        (project: Project) => project.project_name
-      );
+      const projects = data.projects ? data.projects : [];
       dispatch({
         type: UPDATE_PROJECTS,
         payload: projects,

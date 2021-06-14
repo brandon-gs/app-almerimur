@@ -3,4 +3,4 @@ interface Project {
   project_name: string;
 }
 
-type ProjectsState = string[];
+type ProjectsState = Project[];

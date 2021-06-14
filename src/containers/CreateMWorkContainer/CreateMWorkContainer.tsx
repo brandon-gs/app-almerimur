@@ -86,10 +86,27 @@ function CreateMWork() {
     setRechangesErrors(_rechangesErrors);
   };
 
+  const formatValues = () => {
+    const formValues = Object.assign({}, values);
+    // Replace the client name with the client id
+    clients.forEach((client) => {
+      if (client.client_name === formValues.client) {
+        formValues.client = client.client_id;
+      }
+    });
+    // Replace the project name with the project id
+    machines.forEach((machine) => {
+      if (machine.machine_name === formValues.machine) {
+        formValues.machine = machine.machine_id;
+      }
+    });
+    return formValues;
+  };
   /** Function that create a work and executes when press accept on modal */
   const createWork = async () => {
+    const formValues = formatValues();
     const { error, message } = await thunkDispatch(
-      actions.createMechanicWork(token, values, rechanges)
+      actions.createMechanicWork(token, formValues, rechanges)
     );
     if (error) {
       thunkDispatch(
@@ -214,6 +231,10 @@ function CreateMWork() {
     await thunkDispatch(actions.disableLoader());
   };
 
+  React.useEffect(() => {
+    dispatch(actions.setModalAccept(createWork));
+  }, [values]);
+
   return !firstTime ? (
     <ScrollView
       style={{ flex: 1 }}
@@ -225,14 +246,14 @@ function CreateMWork() {
         <View style={styles.root}>
           <SelectInput
             placeholder="Cliente"
-            options={clients}
+            options={clients.map((client) => client.client_name)}
             value={values.client}
             labelError={errors.client}
             style={styles.select}
             onChange={handleOnChangeSelect("client")}
           />
           <SelectInput
-            options={machines}
+            options={machines.map((machine) => machine.machine_name)}
             placeholder="Maquinas"
             value={values.machine}
             style={styles.select}

@@ -2,10 +2,10 @@ interface DriverWork {
   id: number;
   driver_work_id: number;
   driver_work_user_id: number;
-  driver_work_client_name?: string | null;
-  driver_work_project_name?: string | null;
+  driver_work_client_id?: string | null;
+  driver_work_project_id?: string | null;
   driver_work_date?: Date | null | string;
-  driver_work_vehicle_name?: string | null;
+  driver_work_vehicle_id?: string | null;
   driver_work_concept?: string | null;
   driver_work_hours?: number | null;
   driver_work_travels?: number | null;
@@ -20,8 +20,8 @@ interface MechanicWork {
   id: number;
   mechanic_work_id: number;
   mechanic_work_user_id: number;
-  mechanic_work_client_name: string | null;
-  mechanic_work_machine_name: string | null;
+  mechanic_work_client_id: string | null;
+  mechanic_work_machine_id: string | null;
   mechanic_work_hours: string | null;
   mechanic_work_created_at: Date | null;
   mechanic_work_works: string | null;

@@ -12,7 +12,7 @@ const getVehiclesFromApi = (token: string): ReduxThunkAction => {
           authorization: token,
         },
       });
-      const vehicles = data.vehicles.map((vehicle: Vehicle) => vehicle.name);
+      const vehicles = data.vehicles ? data.vehicles : [];
       dispatch({
         type: UPDATE_VEHICLES,
         payload: vehicles,
