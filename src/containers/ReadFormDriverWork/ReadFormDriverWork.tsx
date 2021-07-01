@@ -85,8 +85,8 @@ export default function ReadFormDriverWork({
   React.useEffect(() => {
     const copyWork = Object.assign({}, work);
     vehicles.forEach((vehicle) => {
-      if (vehicle.id === values.driver_work_vehicle_id) {
-        copyWork.driver_work_vehicle_id = vehicle.name;
+      if (vehicle.machine_id === values.driver_work_vehicle_id) {
+        copyWork.driver_work_vehicle_id = vehicle.machine_name;
       }
     });
     setWork(copyWork);

@@ -7,12 +7,12 @@ export const UPDATE_VEHICLES = "UPDATE_VEHICLES";
 const getVehiclesFromApi = (token: string): ReduxThunkAction => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("/get_vehicles.php", {
+      const { data } = await axios.get("/get_machines.php", {
         headers: {
           authorization: token,
         },
       });
-      const vehicles = data.vehicles ? data.vehicles : [];
+      const vehicles = data.machines ? data.machines : [];
       dispatch({
         type: UPDATE_VEHICLES,
         payload: vehicles,

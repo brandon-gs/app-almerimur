@@ -3,4 +3,4 @@ interface Vehicle {
   name: string;
 }
 
-type VehiclesState = Vehicle[];
+type VehiclesState = Machine[];

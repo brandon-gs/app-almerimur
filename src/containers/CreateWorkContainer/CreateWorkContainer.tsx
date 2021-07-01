@@ -44,8 +44,8 @@ function CreateWork() {
     });
     // Replace the vehicle name with the vehicle id
     vehicles.forEach((vehicle) => {
-      if (vehicle.name === formValues.vehicle) {
-        formValues.vehicle = vehicle.id;
+      if (vehicle.machine_name === formValues.vehicle) {
+        formValues.vehicle = vehicle.machine_id;
       }
     });
     return formValues;
@@ -191,7 +191,7 @@ function CreateWork() {
           onChange={handleOnChangeSelect("date")}
         />
         <SelectInput
-          options={vehicles.map((vehicle) => vehicle.name)}
+          options={vehicles.map((vehicle) => vehicle.machine_name)}
           placeholder="Vehículo"
           value={values.vehicle}
           style={styles.select}

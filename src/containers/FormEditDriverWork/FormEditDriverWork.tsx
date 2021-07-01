@@ -62,8 +62,8 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
     });
     // Replace the vehicle name with the vehicle id
     vehicles.forEach((vehicle) => {
-      if (vehicle.name === formValues.vehicle) {
-        formValues.vehicle = vehicle.id;
+      if (vehicle.machine_name === formValues.vehicle) {
+        formValues.vehicle = vehicle.machine_id;
       }
     });
     return formValues;
@@ -229,8 +229,8 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
   React.useEffect(() => {
     const copyWork = Object.assign({}, values);
     vehicles.forEach((vehicle) => {
-      if (vehicle.id === values.vehicle) {
-        copyWork.vehicle = vehicle.name;
+      if (vehicle.machine_id === values.vehicle) {
+        copyWork.vehicle = vehicle.machine_name;
       }
     });
     setValues(copyWork);
@@ -279,7 +279,7 @@ function FormEditDriverWork({ id, title }: FormEditDriverWorkProps) {
               onChange={handleOnChangeSelect("date")}
             />
             <SelectInput
-              options={vehicles.map((vehicle) => vehicle.name)}
+              options={vehicles.map((vehicle) => vehicle.machine_name)}
               editable={editable}
               style={styles.select}
               placeholder="Vehículo"
